@@ -1373,3 +1373,325 @@ function animateCounters() {
 
   No API keys are required by this frontend demo.
 */
+/* =========================================================
+   HAZE FINAL JS POLISH
+   Performance + map theme + search optimization
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  /* ---------- MAP THEME ---------- */
+
+  function updateHazeMapTheme() {
+    if (!map) return;
+
+    const isLight =
+      document.body.classList.contains("light");
+
+    const tilePane =
+      map.getPane("tilePane");
+
+    if (tilePane) {
+      tilePane.style.filter = isLight
+        ? "none"
+        : "invert(88%) hue-rotate(180deg) brightness(.82) contrast(1.04)";
+    }
+
+    map.getContainer()
+      .classList.toggle(
+        "haze-map-dark",
+        !isLight
+      );
+  }
+
+
+  /* ---------- OVERRIDE THEME SYNC ---------- */
+
+  const originalSyncThemeButton =
+    syncThemeButton;
+
+  window.syncThemeButton = function () {
+    originalSyncThemeButton();
+
+    requestAnimationFrame(() => {
+      updateHazeMapTheme();
+    });
+  };
+
+
+  /* ---------- MAP THEME AFTER INITIALIZATION ---------- */
+
+  const originalInitializeMap =
+    initializeMap;
+
+  window.initializeMap = function () {
+    originalInitializeMap();
+
+    requestAnimationFrame(() => {
+      updateHazeMapTheme();
+    });
+  };
+
+
+  /* ---------- LIGHTWEIGHT VEHICLE UPDATES ---------- */
+
+  window.updateVehicleMarkers =
+    function (data) {
+
+      if (!map || !Array.isArray(data)) {
+        return;
+      }
+
+      const existing = new Map();
+
+      vehicleMarkers.forEach(marker => {
+        const id =
+          marker.__hazeVehicleId;
+
+        if (id) {
+          existing.set(id, marker);
+        }
+      });
+
+      data.forEach(vehicle => {
+
+        const id =
+          vehicle.vehicle_id;
+
+        const marker =
+          existing.get(id);
+
+        if (marker) {
+
+          marker.setLatLng([
+            vehicle.latitude,
+            vehicle.longitude
+          ]);
+
+          marker.__hazeVehicle = vehicle;
+
+          marker.setTooltipContent(
+            `${vehicle.vehicle_id} • Route ${vehicle.route}`
+          );
+
+        }
+
+      });
+
+    };
+
+
+  /* ---------- DEBOUNCED MAP SEARCH ---------- */
+
+  const originalSetupMapSearch =
+    setupMapSearch;
+
+  window.setupMapSearch = function () {
+
+    const input =
+      document.getElementById(
+        "mapSearchInput"
+      );
+
+    if (!input) {
+      originalSetupMapSearch();
+      return;
+    }
+
+    originalSetupMapSearch();
+
+    let timer = null;
+
+    input.addEventListener(
+      "input",
+      function () {
+
+        clearTimeout(timer);
+
+        timer = setTimeout(() => {
+
+          const value =
+            input.value.trim();
+
+          if (!value) return;
+
+          /*
+           * Search is intentionally local/mock.
+           * No external geocoding API.
+           */
+
+        }, 180);
+
+      },
+      { passive: true }
+    );
+
+  };
+
+
+  /* ---------- CLOSE SEARCH WITH ESC ---------- */
+
+  document.addEventListener(
+    "keydown",
+    event => {
+
+      if (event.key !== "Escape") {
+        return;
+      }
+
+      closeSearchResults();
+
+      document
+        .getElementById("chatPanel")
+        ?.classList.remove("open");
+
+      closeVehicleDetails();
+
+    },
+    { passive: true }
+  );
+
+
+  /* ---------- CHAT BOT WINK TRIGGER ---------- */
+
+  function triggerBotWink() {
+
+    const bot =
+      document.querySelector(
+        ".bot-avatar"
+      );
+
+    if (!bot) return;
+
+    bot.classList.remove(
+      "haze-wink-now"
+    );
+
+    /*
+     * Force a fresh animation cycle.
+     */
+    void bot.offsetWidth;
+
+    bot.classList.add(
+      "haze-wink-now"
+    );
+
+  }
+
+
+  /*
+   * Give the bot a subtle wink whenever
+   * it sends a response.
+   */
+  const originalSendChatMessage =
+    sendChatMessage;
+
+  window.sendChatMessage =
+    function () {
+
+      originalSendChatMessage();
+
+      setTimeout(
+        triggerBotWink,
+        430
+      );
+
+    };
+
+
+  /* ---------- PERFORMANCE-SAFE COUNTERS ---------- */
+
+  const originalAnimateCounters =
+    animateCounters;
+
+  window.animateCounters =
+    function () {
+
+      if (
+        window.matchMedia &&
+        window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches
+      ) {
+
+        document
+          .querySelectorAll(
+            "[data-counter]"
+          )
+          .forEach(element => {
+
+            const target =
+              element.dataset.counter || 0;
+
+            const suffix =
+              element.dataset.suffix || "";
+
+            element.textContent =
+              `${target}${suffix}`;
+
+          });
+
+        return;
+      }
+
+      originalAnimateCounters();
+
+    };
+
+
+  /* ---------- MAP RESIZE SAFETY ---------- */
+
+  let resizeTimer = null;
+
+  window.addEventListener(
+    "resize",
+    () => {
+
+      clearTimeout(resizeTimer);
+
+      resizeTimer =
+        setTimeout(() => {
+
+          if (map) {
+            map.invalidateSize({
+              pan: false,
+              animate: false
+            });
+          }
+
+        }, 180);
+
+    },
+    { passive: true }
+  );
+
+
+  /* ---------- INITIAL THEME SYNC ---------- */
+
+  if (
+    document.readyState ===
+    "loading"
+  ) {
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+        setTimeout(
+          updateHazeMapTheme,
+          80
+        );
+      },
+      { once: true }
+    );
+
+  } else {
+
+    setTimeout(
+      updateHazeMapTheme,
+      80
+    );
+
+  }
+
+})();
