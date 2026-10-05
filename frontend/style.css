@@ -2355,3 +2355,520 @@ footer{
     display:block
   }
            }
+
+/* =========================================================
+   HAZE FINAL POLISH PATCH
+   Compatibility + performance + responsive refinement
+   ========================================================= */
+
+/* ---------- BRAND ---------- */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+.brand-logo {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.brand-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.brand-text strong {
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: 2px;
+}
+
+.brand-text span {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 6px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+/* ---------- HERO ---------- */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.hero-photo {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(3, 12, 17, .94) 0%,
+      rgba(3, 12, 17, .72) 42%,
+      rgba(3, 12, 17, .48) 100%
+    ),
+    url("https://upload.wikimedia.org/wikipedia/commons/5/57/Charminar_Hyderabad_India.jpg")
+    center / cover no-repeat;
+  transform: scale(1.01);
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(
+      circle at 78% 42%,
+      rgba(93, 232, 223, .12),
+      transparent 32%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(3, 12, 17, .12),
+      rgba(3, 12, 17, .74)
+    );
+  pointer-events: none;
+}
+
+.hero-grid {
+  pointer-events: none;
+}
+
+/* ---------- BUTTON COMPATIBILITY ---------- */
+
+.primary-button,
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 43px;
+  border-radius: 11px;
+  padding: 0 17px;
+  font: inherit;
+  font-size: 9px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform .25s ease,
+    border-color .25s ease,
+    background-color .25s ease,
+    box-shadow .25s ease;
+}
+
+.primary-button {
+  border: 1px solid rgba(93, 232, 223, .5);
+  background: var(--cyan);
+  color: #041217;
+  box-shadow: 0 10px 28px rgba(93, 232, 223, .12);
+}
+
+.secondary-button {
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.045);
+  color: var(--text);
+}
+
+.primary-button:hover,
+.secondary-button:hover {
+  transform: translateY(-2px);
+}
+
+.primary-button:active,
+.secondary-button:active {
+  transform: translateY(0);
+}
+
+/* ---------- AI SECTION ---------- */
+
+.ai-layout {
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: 18px;
+  align-items: stretch;
+}
+
+.ai-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ai-copy h2 {
+  font-size: clamp(44px, 5.5vw, 72px);
+  line-height: .92;
+  letter-spacing: -3px;
+  margin: 12px 0 19px;
+}
+
+.ai-copy p {
+  max-width: 580px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+  margin-bottom: 25px;
+}
+
+.ai-preview {
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ---------- BOT / WINK ---------- */
+
+.bot-avatar {
+  position: relative;
+  overflow: hidden;
+}
+
+.bot-avatar .eye {
+  transform-origin: center;
+}
+
+@keyframes hazeWink {
+  0%, 82%, 100% {
+    transform: scaleY(1);
+  }
+
+  84%, 88% {
+    transform: scaleY(.12);
+  }
+
+  90% {
+    transform: scaleY(1);
+  }
+}
+
+/* One eye occasionally winks; lightweight transform-only animation */
+.bot-avatar .eye.right {
+  animation:
+    botBlink 5.2s infinite,
+    hazeWink 7.5s 1.8s infinite;
+}
+
+/* ---------- MAP ---------- */
+
+.map-container {
+  position: relative;
+  isolation: isolate;
+  min-height: 450px;
+}
+
+.map-container #map {
+  height: 450px;
+  width: 100%;
+  z-index: 1;
+}
+
+.map-search {
+  position: absolute;
+  z-index: 1001;
+  top: 14px;
+  right: 58px;
+  width: min(330px, calc(100% - 78px));
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 13px;
+  background: rgba(4,13,19,.92);
+  box-shadow: 0 14px 30px rgba(0,0,0,.25);
+  overflow: visible;
+}
+
+.light .map-search {
+  background: rgba(255,255,255,.96);
+  border-color: rgba(10,50,65,.14);
+}
+
+.map-search input {
+  flex: 1;
+  min-width: 0;
+  height: 42px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  padding: 0 4px;
+  font-size: 10px;
+}
+
+.map-search button {
+  flex: 0 0 auto;
+}
+
+.map-search > button:first-child {
+  width: 42px;
+  height: 42px;
+  border: 0;
+  background: transparent;
+  color: var(--cyan);
+  font-size: 19px;
+}
+
+.map-search > button:last-of-type {
+  height: 30px;
+  margin-right: 6px;
+  border: 0;
+  border-radius: 8px;
+  padding: 0 10px;
+  background: var(--cyan);
+  color: #041217;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.search-results {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 7px);
+  z-index: 1002;
+  display: none;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.search-results.open {
+  display: block;
+}
+
+.search-results button {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  font-size: 9px;
+  cursor: pointer;
+}
+
+.search-results button:hover {
+  background: rgba(93,232,223,.08);
+}
+
+/* Never let search collide with Leaflet zoom */
+.map-container .leaflet-control-zoom {
+  position: relative;
+  z-index: 1000;
+  margin: 14px !important;
+}
+
+/* ---------- ROUTE PERFORMANCE ---------- */
+
+.route-card,
+.stat-card,
+.analytics-card,
+.environment-stat,
+.risk-card,
+.weather-card,
+.risk-index,
+.heat-zones {
+  will-change: transform;
+}
+
+.route-card {
+  transition:
+    transform .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+/* ---------- LIVE BROADCAST ---------- */
+
+.broadcast-live {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 999px;
+  background: rgba(255,255,255,.045);
+  overflow: hidden;
+}
+
+.broadcast-live::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 20%,
+    rgba(255,255,255,.14) 50%,
+    transparent 80%
+  );
+  transform: translateX(-120%);
+  animation: liveSweep 3.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.broadcast-live i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 0 0 rgba(255,111,120,.45);
+  animation: livePulse 1.7s infinite;
+}
+
+.broadcast-live strong {
+  position: relative;
+  z-index: 1;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+}
+
+@keyframes livePulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255,111,120,.35);
+  }
+  50% {
+    box-shadow: 0 0 0 7px rgba(255,111,120,0);
+  }
+}
+
+@keyframes liveSweep {
+  0%, 55%, 100% {
+    transform: translateX(-120%);
+  }
+  72% {
+    transform: translateX(120%);
+  }
+}
+
+/* ---------- REDUCE EXPENSIVE EFFECTS ---------- */
+
+.glass {
+  backface-visibility: hidden;
+}
+
+@media (max-width: 850px) {
+
+  .brand-text span {
+    display: none;
+  }
+
+  .brand-logo {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+  }
+
+  .ai-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .map-container {
+    min-height: 370px;
+  }
+
+  .map-container #map {
+    height: 370px;
+  }
+
+  .map-search {
+    left: 12px;
+    right: 58px;
+    width: auto;
+    top: 12px;
+  }
+
+  .map-container .leaflet-control-zoom {
+    margin: 12px !important;
+  }
+}
+
+@media (max-width: 560px) {
+
+  .hero-photo {
+    background-position: 62% center;
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+  }
+
+  .hero-buttons {
+    width: 100%;
+  }
+
+  .broadcast-live {
+    margin-top: 10px;
+  }
+
+  .map-search {
+    left: 10px;
+    right: 52px;
+    width: auto;
+  }
+
+  .map-search > button:last-of-type {
+    display: none;
+  }
+
+  .map-container #map {
+    height: 340px;
+  }
+
+  .map-legend {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    justify-content: center;
+  }
+
+  .chat-panel {
+    right: 10px;
+    left: 10px;
+    bottom: 86px;
+    width: auto;
+    height: min(510px, calc(100vh - 110px));
+  }
+
+  .chat-fab {
+    right: 14px;
+    bottom: 14px;
+  }
+}
+
+/* ---------- ACCESSIBILITY / PERFORMANCE ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+    }
