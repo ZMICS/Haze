@@ -1,308 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>HAZE — Smart Urban Mobility</title>
-
-    <!-- Leaflet -->
-    <link
-        rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
-
-    <!-- HAZE CSS -->
-    <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-    <!-- ================= HEADER ================= -->
-    <header class="navbar">
-        <div class="logo">
-            <span class="logo-mark">H</span>
-            <div>
-                <strong>HAZE</strong>
-                <small>Hyperlocal AI-powered Zonal Mobility Engine</small>
-            </div>
-        </div>
-
-        <nav>
-            <a href="#home">Home</a>
-            <a href="#transit">Live Transit</a>
-            <a href="#routes">Routes</a>
-            <a href="#analytics">Analytics</a>
-            <a href="#assistant">AI Assistant</a>
-            <a href="#about">About</a>
-        </nav>
-
-        <button class="login-btn">Login</button>
-    </header>
-
-
-    <!-- ================= HERO ================= -->
-    <main>
-
-        <section id="home" class="hero">
-
-            <div class="hero-overlay"></div>
-
-            <div class="hero-content">
-
-                <div class="location-badge">
-                    ● Hyderabad
-                </div>
-
-                <h1>
-                    Move Smarter<br>
-                    Through Your <span>City.</span>
-                </h1>
-
-                <p>
-                    HAZE is a hyperlocal AI-powered zonal mobility engine
-                    that helps you track buses, detect congestion,
-                    and plan better routes in real-time.
-                </p>
-
-                <div class="hero-buttons">
-                    <button class="primary-btn" onclick="scrollToTransit()">
-                        Explore Live Transit →
-                    </button>
-
-                    <button class="secondary-btn" onclick="scrollToTransit()">
-                        Watch Demo
-                    </button>
-                </div>
-
-                <div class="hero-stats">
-                    <div>
-                        <strong id="heroVehicles">1,240+</strong>
-                        <span>Live Vehicles</span>
-                    </div>
-
-                    <div>
-                        <strong id="heroRoutes">120+</strong>
-                        <span>Bus Routes</span>
-                    </div>
-
-                    <div>
-                        <strong id="heroOnTime">86%</strong>
-                        <span>On-Time Rate</span>
-                    </div>
-
-                    <div>
-                        <strong>Real-time</strong>
-                        <span>City Intelligence</span>
-                    </div>
-                </div>
-
-            </div>
-
-
-            <!-- ROUTE PLANNER CARD -->
-            <div class="planner-card">
-
-                <div class="planner-tabs">
-                    <button class="active">Plan Route</button>
-                    <button>Live Buses</button>
-                    <button>Ask HAZE</button>
-                </div>
-
-                <div class="location-input">
-                    <span>⌖</span>
-                    <div>
-                        <small>From</small>
-                        <strong>Current Location</strong>
-                    </div>
-                </div>
-
-                <div class="location-input">
-                    <span>○</span>
-                    <div>
-                        <small>To</small>
-                        <strong>Destination</strong>
-                    </div>
-                </div>
-
-                <button class="find-route-btn">
-                    Find Best Route
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= LIVE TRANSIT ================= -->
-        <section id="transit" class="section">
-
-            <div class="section-heading">
-                <span>01 / LIVE TRANSIT</span>
-                <h2>City Mobility <span>In Real-Time.</span></h2>
-                <p>Monitor vehicles, routes and congestion across the city.</p>
-            </div>
-
-            <div class="dashboard">
-
-                <aside class="sidebar">
-
-                    <div class="side-logo">
-                        <span class="logo-mark">H</span>
-                        HAZE
-                    </div>
-
-                    <a class="side-link active">⌂ Dashboard</a>
-                    <a class="side-link">◉ Live Transit</a>
-                    <a class="side-link">▣ Routes</a>
-                    <a class="side-link">◌ Analytics</a>
-                    <a class="side-link">✦ AI Assistant</a>
-
-                </aside>
-
-
-                <div class="dashboard-main">
-
-                    <!-- STAT CARDS -->
-                    <div class="stat-grid">
-
-                        <div class="stat-card">
-                            <small>ACTIVE VEHICLES</small>
-                            <strong id="activeVehicles">142</strong>
-                            <span>● Live now</span>
-                        </div>
-
-                        <div class="stat-card">
-                            <small>ACTIVE ROUTES</small>
-                            <strong id="activeRoutes">24</strong>
-                            <span>● Operating</span>
-                        </div>
-
-                        <div class="stat-card">
-                            <small>ON-TIME</small>
-                            <strong id="onTime">87%</strong>
-                            <span>● Performance</span>
-                        </div>
-
-                        <div class="stat-card warning">
-                            <small>CONGESTED</small>
-                            <strong id="congestedRoutes">4</strong>
-                            <span>● Need attention</span>
-                        </div>
-
-                    </div>
-
-
-                    <!-- MAP -->
-                    <div class="map-card">
-
-                        <div class="map-header">
-                            <div>
-                                <small>LIVE TRANSIT MAP</small>
-                                <h3>Hyderabad Mobility Network</h3>
-                            </div>
-
-                            <span class="live-badge">● LIVE</span>
-                        </div>
-
-                        <div id="map"></div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= ROUTES ================= -->
-        <section id="routes" class="section dark-section">
-
-            <div class="section-heading">
-                <span>03 / ROUTE DETAILS</span>
-                <h2>Explore Your <span>Routes.</span></h2>
-                <p>Detailed information about bus routes with live tracking.</p>
-            </div>
-
-            <div class="route-layout">
-
-                <div class="route-card">
-
-                    <div class="route-icon">🚌</div>
-
-                    <div>
-                        <small>BUS ROUTE</small>
-                        <h3>Route 218</h3>
-                        <p>Hyderabad City Transit</p>
-                    </div>
-
-                    <span class="route-status normal">ON TIME</span>
-
-                    <div class="route-metrics">
-                        <div>
-                            <strong>24</strong>
-                            <span>Live Buses</span>
-                        </div>
-
-                        <div>
-                            <strong>48 min</strong>
-                            <span>Average Trip</span>
-                        </div>
-
-                        <div>
-                            <strong>12.4 km</strong>
-                            <span>Route Length</span>
-                        </div>
-
-                        <div>
-                            <strong>86%</strong>
-                            <span>On-Time</span>
-                        </div>
-                    </div>
-
-                </div>
-
-
-                <div class="route-list">
-
-                    <div class="route-row">
-                        <strong>25A</strong>
-                        <span class="normal">● NORMAL</span>
-                    </div>
-
-                    <div class="route-row">
-                        <strong>10H</strong>
-                        <span class="slow">● SLOW</span>
-                    </div>
-
-                    <div class="route-row">
-                        <strong>218</strong>
-                        <span class="congested">● CONGESTED</span>
-                    </div>
-
-                    <div class="route-row">
-                        <strong>5K</strong>
-                        <span class="normal">● NORMAL</span>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= ANALYTICS ================= -->
-        <section id="analytics" class="section">
-
-            <div class="section-heading">
-                <span>04 / ANALYTICS</span>
-                <h2>Understand Your <span>City.</span></h2>
-                <p>Visual insights about traffic, congestion and transit patterns.</p>
-            </div>
-
-            <div class="analytics-grid">
-
-                <div class="analytics-card large">
-                    <small
+/* HAZE frontend logic — demo data only */
+const demoStats={activeVehicles:142,activeRoutes:24,onTime:87,congestedRoutes:4};
+const demoVehicles=[
+{vehicle_id:"BUS-101",route:"25A",latitude:17.385,longitude:78.4867,speed:24,delay:2,status:"normal"},
+{vehicle_id:"BUS-216",route:"25A",latitude:17.391,longitude:78.48,speed:18,delay:5,status:"delayed"},
+{vehicle_id:"BUS-305",route:"218",latitude:17.378,longitude:78.492,speed:9,delay:11,status:"congested"},
+{vehicle_id:"BUS-412",route:"10H",latitude:17.397,longitude:78.475,speed:15,delay:6,status:"delayed"},
+{vehicle_id:"BUS-527",route:"5K",latitude:17.369,longitude:78.501,speed:28,delay:1,status:"normal"},
+{vehicle_id:"BUS-633",route:"218",latitude:17.402,longitude:78.488,speed:7,delay:14,status:"congested"}];
+const demoCongestion=[{route:"25A",status:"normal"},{route:"10H",status:"slow"},{route:"218",status:"congested"},{route:"5K",status:"normal"}];
+let map=null,vehicleMarkers=[];
+
+document.addEventListener("DOMContentLoaded",()=>{
+  initializeMap();updateStatistics(demoStats);addVehicleMarkers(demoVehicles);updateCongestion(demoCongestion);
+});
+
+function initializeMap(){
+  const el=document.getElementById("map");if(!el||typeof L==="undefined")return;
+  map=L.map("map").setView([17.385,78.4867],13);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap contributors"}).addTo(map);
+}
+function createVehicleMarker(vehicle){
+  const cls=vehicle.status==="congested"?"congested-marker":vehicle.status==="delayed"?"delayed-marker":"normal-marker";
+  const icon=L.divIcon({className:"",html:`<div class="vehicle-marker ${cls}">🚌</div>`,iconSize:[29,29],iconAnchor:[14,14]});
+  const marker=L.marker([vehicle.latitude,vehicle.longitude],{icon}).addTo(map);
+  marker.on("click",()=>showVehicleDetails(vehicle));return marker;
+}
+function addVehicleMarkers(vehicles){
+  if(!map)return;vehicleMarkers.forEach(m=>map.removeLayer(m));vehicleMarkers=[];
+  vehicles.forEach(v=>vehicleMarkers.push(createVehicleMarker(v)));
+}
+function updateVehicleMarkers(data){if(Array.isArray(data))addVehicleMarkers(data);}
+function showVehicleDetails(vehicle){
+  const set=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value};
+  set("detailVehicleId",vehicle.vehicle_id);set("detailRoute",vehicle.route);
+  set("detailSpeed",`${vehicle.speed} km/h`);set("detailDelay",`+${vehicle.delay} min`);
+  set("detailStatus",vehicle.status.toUpperCase());set("detailUpdated","Last updated: Demo data");
+  document.getElementById("vehiclePanel")?.classList.add("open");
+}
+function closeVehicleDetails(){document.getElementById("vehiclePanel")?.classList.remove("open")}
+function updateStatistics(data){
+  if(!data)return;
+  const ids={activeVehicles:data.activeVehicles,activeRoutes:data.activeRoutes,onTime:`${data.onTime}%`,congestedRoutes:data.congestedRoutes};
+  Object.entries(ids).forEach(([id,value])=>{const el=document.getElementById(id);if(el)el.textContent=value});
+  const hero={heroVehicles:`${data.activeVehicles*8}+`,heroRoutes:`${data.activeRoutes*5}+`,heroOnTime:`${data.onTime}%`};
+  Object.entries(hero).forEach(([id,value])=>{const el=document.getElementById(id);if(el)el.textContent=value});
+}
+function updateCongestion(data){if(!Array.isArray(data))return;/* future backend data will update route status cards here */}
+function scrollToTransit(){document.getElementById("transit")?.scrollIntoView({behavior:"smooth"})}
+function toggleChat(){document.getElementById("chatPanel")?.classList.toggle("open")}
+function handleChatKey(event){if(event.key==="Enter")sendChatMessage()}
+function addChatMessage(text,type="bot"){
+  const box=document.getElementById("chatMessages");if(!box)return;
+  const div=document.createElement("div");div.className=`chat-message ${type}`;div.textContent=text;box.appendChild(div);box.scrollTop=box.scrollHeight;
+}
+function sendChatMessage(){
+  const input=document.getElementById("chatInput");if(!input)return;
+  const message=input.value.trim();if(!message)return;
+  addChatMessage(message,"user");input.value="";
+  setTimeout(()=>addChatMessage("Demo mode: I can show the HAZE interface now. A future FastAPI connection can provide live transit answers."),350);
+
+  /*
+    FUTURE BACKEND CONNECTION — no API key belongs in frontend code.
+    GET  /api/vehicles
+    GET  /api/routes
+    GET  /api/congestion
+    GET  /api/stats
+    POST /api/chat
+  */
+}
