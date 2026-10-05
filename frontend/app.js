@@ -1,1691 +1,1375 @@
-/* =========================================================
-   HAZE
-   Hyderabad Advanced Zone & Express Transit
-   Frontend-only demo
-========================================================= */
-
-
-/* =========================================================
-   MOCK DATA
-========================================================= */
-
 const demoStats = {
-    activeVehicles: 142,
-    activeRoutes: 24,
-    onTimeRate: 87,
-    congestedRoutes: 4
+  activeVehicles: 142,
+  activeRoutes: 24,
+  onTime: 87,
+  congestedRoutes: 4
 };
-
 
 const demoVehicles = [
-
-    {
-        vehicle_id: "BUS-101",
-        route: "25A",
-        latitude: 17.385,
-        longitude: 78.4867,
-        speed: 24,
-        delay: 2,
-        status: "normal"
-    },
-
-    {
-        vehicle_id: "BUS-216",
-        route: "25A",
-        latitude: 17.391,
-        longitude: 78.480,
-        speed: 18,
-        delay: 5,
-        status: "delayed"
-    },
-
-    {
-        vehicle_id: "BUS-305",
-        route: "218",
-        latitude: 17.378,
-        longitude: 78.492,
-        speed: 9,
-        delay: 11,
-        status: "congested"
-    },
-
-    {
-        vehicle_id: "BUS-412",
-        route: "10H",
-        latitude: 17.397,
-        longitude: 78.475,
-        speed: 15,
-        delay: 6,
-        status: "delayed"
-    },
-
-    {
-        vehicle_id: "BUS-527",
-        route: "5K",
-        latitude: 17.369,
-        longitude: 78.501,
-        speed: 28,
-        delay: 1,
-        status: "normal"
-    },
-
-    {
-        vehicle_id: "BUS-633",
-        route: "218",
-        latitude: 17.402,
-        longitude: 78.488,
-        speed: 7,
-        delay: 14,
-        status: "congested"
-    }
-
+  {
+    vehicle_id: "BUS-101",
+    route: "25A",
+    latitude: 17.3850,
+    longitude: 78.4867,
+    speed: 24,
+    delay: 2,
+    status: "normal"
+  },
+  {
+    vehicle_id: "BUS-216",
+    route: "25A",
+    latitude: 17.3910,
+    longitude: 78.4800,
+    speed: 18,
+    delay: 5,
+    status: "delayed"
+  },
+  {
+    vehicle_id: "BUS-305",
+    route: "218",
+    latitude: 17.3780,
+    longitude: 78.4920,
+    speed: 9,
+    delay: 11,
+    status: "congested"
+  },
+  {
+    vehicle_id: "BUS-412",
+    route: "10H",
+    latitude: 17.3970,
+    longitude: 78.4750,
+    speed: 15,
+    delay: 6,
+    status: "delayed"
+  },
+  {
+    vehicle_id: "BUS-527",
+    route: "5K",
+    latitude: 17.3690,
+    longitude: 78.5010,
+    speed: 28,
+    delay: 1,
+    status: "normal"
+  },
+  {
+    vehicle_id: "BUS-633",
+    route: "218",
+    latitude: 17.4020,
+    longitude: 78.4880,
+    speed: 7,
+    delay: 14,
+    status: "congested"
+  }
 ];
 
 
-const heatRiskData = {
+const routeData = {
 
-    temperature: 39,
+  "25A": {
+    from: "Secunderabad",
+    to: "Mehdipatnam",
+    status: "ON TIME",
+    color: "#55e5dd",
+    vehicles: 4,
+    eta: "32 min",
 
-    feelsLike: 44,
+    points: [
+      [17.4399,78.4983],
+      [17.4250,78.4920],
+      [17.4020,78.4880],
+      [17.3850,78.4867],
+      [17.3618,78.4747],
+      [17.3418,78.4495]
+    ]
+  },
 
-    risk: "HIGH",
+  "218": {
+    from: "ECIL",
+    to: "Mehdipatnam",
+    status: "DELAYED",
+    color: "#f5ca58",
+    vehicles: 6,
+    eta: "41 min",
 
-    affectedStops: 12,
+    points: [
+      [17.4770,78.5650],
+      [17.4550,78.5480],
+      [17.4200,78.5250],
+      [17.3920,78.5050],
+      [17.3700,78.4850],
+      [17.3420,78.4490]
+    ]
+  },
 
-    highExposureRoutes: 4,
+  "10H": {
+    from: "Secunderabad",
+    to: "Koti",
+    status: "SLOW",
+    color: "#ff8b62",
+    vehicles: 3,
+    eta: "27 min",
 
-    riskIndex: 82
+    points: [
+      [17.4399,78.4983],
+      [17.4250,78.4920],
+      [17.4020,78.4880],
+      [17.3820,78.4850],
+      [17.3650,78.4820],
+      [17.3610,78.4760]
+    ]
+  },
+
+  "5K": {
+    from: "Koti",
+    to: "Kukatpally",
+    status: "ON TIME",
+    color: "#66a8ff",
+    vehicles: 5,
+    eta: "36 min",
+
+    points: [
+      [17.3850,78.4867],
+      [17.3750,78.4750],
+      [17.3610,78.4560],
+      [17.3700,78.4300],
+      [17.4050,78.4120],
+      [17.4930,78.3990]
+    ]
+  }
 
 };
 
 
-/* =========================================================
-   HYDERABAD BOUNDARY
-========================================================= */
+const searchPlaces = [
 
-const HYDERABAD_BOUNDS = [
-    [17.20, 78.25],
-    [17.55, 78.70]
-];
-
-
-/* =========================================================
-   DEMO SEARCH LOCATIONS
-   No external geocoding API.
-   Backend can replace this later.
-========================================================= */
-
-const hyderabadLocations = [
-
-    {
-        names: [
-            "charminar",
-            "charminar hyderabad"
-        ],
-        label: "Charminar",
-        lat: 17.3616,
-        lng: 78.4747
-    },
-
-    {
-        names: [
-            "secunderabad",
-            "secunderabad station",
-            "secunderabad railway station"
-        ],
-        label: "Secunderabad",
-        lat: 17.4399,
-        lng: 78.4983
-    },
-
-    {
-        names: [
-            "hitech city",
-            "hitechcity",
-            "hit ecity"
-        ],
-        label: "HITEC City",
-        lat: 17.4435,
-        lng: 78.3772
-    },
-
-    {
-        names: [
-            "gachibowli"
-        ],
-        label: "Gachibowli",
-        lat: 17.4401,
-        lng: 78.3489
-    },
-
-    {
-        names: [
-            "kukatpally"
-        ],
-        label: "Kukatpally",
-        lat: 17.4849,
-        lng: 78.4138
-    },
-
-    {
-        names: [
-            "ameerpet"
-        ],
-        label: "Ameerpet",
-        lat: 17.4375,
-        lng: 78.4483
-    },
-
-    {
-        names: [
-            "begumpet"
-        ],
-        label: "Begumpet",
-        lat: 17.4439,
-        lng: 78.4660
-    },
-
-    {
-        names: [
-            "banjara hills",
-            "banjarahills"
-        ],
-        label: "Banjara Hills",
-        lat: 17.4156,
-        lng: 78.4347
-    },
-
-    {
-        names: [
-            "jubilee hills",
-            "jubileehills"
-        ],
-        label: "Jubilee Hills",
-        lat: 17.4326,
-        lng: 78.4071
-    },
-
-    {
-        names: [
-            "mehdipatnam"
-        ],
-        label: "Mehdipatnam",
-        lat: 17.3960,
-        lng: 78.4404
-    },
-
-    {
-        names: [
-            "koti"
-        ],
-        label: "Koti",
-        lat: 17.3850,
-        lng: 78.4867
-    },
-
-    {
-        names: [
-            "hussain sagar",
-            "hussainsagar"
-        ],
-        label: "Hussain Sagar",
-        lat: 17.4239,
-        lng: 78.4738
-    }
+  ["Charminar",17.3616,78.4747],
+  ["Secunderabad",17.4399,78.4983],
+  ["HITEC City",17.4435,78.3772],
+  ["Gachibowli",17.4401,78.3489],
+  ["Kukatpally",17.4849,78.4138],
+  ["Ameerpet",17.4375,78.4483],
+  ["Begumpet",17.4435,78.4596],
+  ["Banjara Hills",17.4156,78.4347],
+  ["Jubilee Hills",17.4319,78.4070],
+  ["Mehdipatnam",17.3947,78.4425],
+  ["Koti",17.3842,78.4866],
+  ["Hussain Sagar",17.4239,78.4738]
 
 ];
 
-
-/* =========================================================
-   MAP STATE
-========================================================= */
 
 let map = null;
-
 let vehicleMarkers = [];
-
+let routeLayers = [];
 let heatLayers = [];
-
-let lightTileLayer = null;
-
-let darkTileLayer = null;
+let selectedRoute = "25A";
+let searchMarker = null;
 
 
-/* =========================================================
-   INITIALIZE
-========================================================= */
+document.addEventListener("DOMContentLoaded", () => {
 
-document.addEventListener("DOMContentLoaded", function () {
+  initTheme();
 
-    initializeTheme();
+  initializeMap();
 
-    initializeMap();
+  updateStatistics(demoStats);
 
-    updateStatistics(demoStats);
+  addVehicleMarkers(demoVehicles);
 
-    addVehicleMarkers(demoVehicles);
+  addHeatRiskZones();
 
-    addHeatRiskLayer();
+  setupReveal();
 
-    setupScrollReveal();
+  setupNavigation();
 
-    setupNavigation();
+  setupMobileMenu();
 
-    startBotWink();
+  setupMapSearch();
 
-    animateCounters();
+  animateCounters();
+
+  renderRouteCards();
 
 });
 
 
-/* =========================================================
-   THEME
-========================================================= */
+/* ================= THEME ================= */
 
-function initializeTheme() {
+function initTheme() {
 
-    const savedTheme =
-        localStorage.getItem("haze-theme");
+  const saved =
+    localStorage.getItem("haze-theme");
 
-    if (savedTheme === "light") {
+  if (saved === "light") {
+    document.body.classList.add("light");
+  }
 
-        document.body.classList.add("light-mode");
+  syncThemeButton();
 
-    }
+  document
+    .getElementById("themeToggle")
+    ?.addEventListener("click", () => {
 
-    updateThemeIcon();
+      document.body.classList.toggle("light");
 
-}
-
-
-function toggleTheme() {
-
-    document.body.classList.toggle("light-mode");
-
-    const isLight =
-        document.body.classList.contains("light-mode");
-
-    localStorage.setItem(
+      localStorage.setItem(
         "haze-theme",
-        isLight ? "light" : "dark"
-    );
+        document.body.classList.contains("light")
+          ? "light"
+          : "dark"
+      );
 
-    updateThemeIcon();
+      syncThemeButton();
 
-    updateMapTheme();
-
-}
-
-
-function updateThemeIcon() {
-
-    const button =
-        document.getElementById("themeToggle");
-
-    if (!button) return;
-
-    const icon =
-        button.querySelector(".theme-thumb");
-
-    if (!icon) return;
-
-    const isLight =
-        document.body.classList.contains("light-mode");
-
-    icon.textContent =
-        isLight ? "☀" : "☾";
-
-}
-
-
-/* =========================================================
-   MAP
-========================================================= */
-
-function initializeMap() {
-
-    const mapElement =
-        document.getElementById("map");
-
-    if (!mapElement) return;
-
-    if (typeof L === "undefined") {
-
-        console.error("Leaflet failed to load.");
-
-        return;
-
-    }
-
-
-    map = L.map("map", {
-
-        minZoom: 11,
-        maxZoom: 17,
-
-        maxBounds: HYDERABAD_BOUNDS,
-
-        maxBoundsViscosity: 1.0
+      if (map) {
+        setTimeout(() => {
+          map.invalidateSize();
+        }, 300);
+      }
 
     });
 
-
-    map.setView(
-        [17.3850, 78.4867],
-        12
-    );
+}
 
 
-    lightTileLayer = L.tileLayer(
+function syncThemeButton() {
 
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  const button =
+    document.getElementById("themeToggle");
 
-        {
-            maxZoom: 19,
+  if (!button) return;
 
-            attribution:
-                "&copy; OpenStreetMap contributors"
-        }
+  const light =
+    document.body.classList.contains("light");
 
-    );
+  button.classList.toggle("light", light);
 
+  const icon =
+    button.querySelector("span");
 
-    darkTileLayer = L.tileLayer(
-
-        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-
-        {
-            maxZoom: 19,
-
-            attribution:
-                "&copy; OpenStreetMap &copy; CARTO"
-        }
-
-    );
-
-
-    updateMapTheme();
+  if (icon) {
+    icon.textContent = light ? "☀" : "☾";
+  }
 
 }
 
 
-function updateMapTheme() {
+/* ================= MAP ================= */
 
-    if (!map) return;
+function initializeMap() {
 
-    const isLight =
-        document.body.classList.contains("light-mode");
+  const element =
+    document.getElementById("map");
+
+  if (!element || typeof L === "undefined") {
+    return;
+  }
+
+  map = L.map("map", {
+
+    zoomControl: true,
+
+    minZoom: 11,
+
+    maxZoom: 17,
+
+    maxBounds: [
+      [17.20,78.25],
+      [17.60,78.75]
+    ],
+
+    maxBoundsViscosity: 0.9
+
+  }).setView(
+    [17.385,78.4867],
+    12.6
+  );
 
 
-    if (isLight) {
+  /*
+    No Carto tiles.
+    No API key.
+    No Google Maps.
+    OpenStreetMap tiles only.
+  */
 
-        if (darkTileLayer &&
-            map.hasLayer(darkTileLayer)) {
-
-            map.removeLayer(darkTileLayer);
-
-        }
-
-        if (lightTileLayer &&
-            !map.hasLayer(lightTileLayer)) {
-
-            lightTileLayer.addTo(map);
-
-        }
-
-    } else {
-
-        if (lightTileLayer &&
-            map.hasLayer(lightTileLayer)) {
-
-            map.removeLayer(lightTileLayer);
-
-        }
-
-        if (darkTileLayer &&
-            !map.hasLayer(darkTileLayer)) {
-
-            darkTileLayer.addTo(map);
-
-        }
-
+  L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+      maxZoom: 19,
+      attribution:
+        "© OpenStreetMap contributors"
     }
+  ).addTo(map);
+
+
+  map.on("click", () => {
+    closeSearchResults();
+  });
+
+
+  drawSelectedRoute();
 
 }
 
 
-/* =========================================================
-   VEHICLES
-========================================================= */
+/* ================= VEHICLES ================= */
 
-function createVehicleMarker(vehicle) {
+function addVehicleMarkers(data) {
 
-    if (!map) return null;
+  if (!map) return;
+
+  vehicleMarkers.forEach(marker => {
+    map.removeLayer(marker);
+  });
+
+  vehicleMarkers = [];
 
 
-    let markerClass =
-        "vehicle-normal";
+  data.forEach(vehicle => {
 
+    let className =
+      "normal-marker";
 
     if (vehicle.status === "delayed") {
-
-        markerClass =
-            "vehicle-delayed";
-
+      className = "delayed-marker";
     }
 
-
     if (vehicle.status === "congested") {
-
-        markerClass =
-            "vehicle-congested";
-
+      className = "congested-marker";
     }
 
 
     const icon =
-        L.divIcon({
+      L.divIcon({
 
-            className: "",
+        className: "",
 
-            html:
-                `<div class="vehicle-marker ${markerClass}">🚌</div>`,
+        html: `
+          <div class="vehicle-marker ${className}">
+            🚌
+          </div>
+        `,
 
-            iconSize: [29, 29],
+        iconSize: [31,31],
 
-            iconAnchor: [14, 14]
+        iconAnchor: [15,15]
 
-        });
+      });
 
 
     const marker =
-        L.marker(
-            [
-                vehicle.latitude,
-                vehicle.longitude
-            ],
-            { icon }
-        );
+      L.marker(
+        [
+          vehicle.latitude,
+          vehicle.longitude
+        ],
+        { icon }
+      ).addTo(map);
 
 
-    marker.addTo(map);
-
-
-    marker.on(
-        "click",
-        function () {
-
-            showVehicleDetails(vehicle);
-
-        }
+    marker.bindTooltip(
+      `${vehicle.vehicle_id} • Route ${vehicle.route}`,
+      {
+        direction: "top",
+        offset: [0,-13]
+      }
     );
 
 
-    return marker;
-
-}
-
-
-function addVehicleMarkers(data) {
-
-    if (!map) return;
+    marker.on("click", () => {
+      showVehicleDetails(vehicle);
+    });
 
 
-    vehicleMarkers.forEach(
-        function (marker) {
+    vehicleMarkers.push(marker);
 
-            map.removeLayer(marker);
-
-        }
-    );
-
-
-    vehicleMarkers = [];
-
-
-    data.forEach(
-        function (vehicle) {
-
-            const marker =
-                createVehicleMarker(vehicle);
-
-            if (marker) {
-
-                vehicleMarkers.push(marker);
-
-            }
-
-        }
-    );
+  });
 
 }
 
 
 function updateVehicleMarkers(data) {
 
-    if (!Array.isArray(data)) return;
-
+  if (Array.isArray(data)) {
     addVehicleMarkers(data);
+  }
 
 }
 
 
-/* =========================================================
-   VEHICLE DETAILS
-========================================================= */
+/* ================= VEHICLE PANEL ================= */
 
 function showVehicleDetails(vehicle) {
 
-    const panel =
-        document.getElementById("vehiclePanel");
+  const setText =
+    (id, value) => {
 
-    if (!panel) return;
+      const element =
+        document.getElementById(id);
 
+      if (element) {
+        element.textContent = value;
+      }
 
-    document.getElementById(
-        "vehiclePanelId"
-    ).textContent =
-        vehicle.vehicle_id;
-
-
-    document.getElementById(
-        "vehiclePanelRoute"
-    ).textContent =
-        vehicle.route;
+    };
 
 
-    document.getElementById(
-        "vehiclePanelSpeed"
-    ).textContent =
-        vehicle.speed + " km/h";
+  setText(
+    "detailVehicleId",
+    vehicle.vehicle_id
+  );
+
+  setText(
+    "detailRoute",
+    vehicle.route
+  );
+
+  setText(
+    "detailSpeed",
+    `${vehicle.speed} km/h`
+  );
+
+  setText(
+    "detailDelay",
+    `+${vehicle.delay} min`
+  );
+
+  setText(
+    "detailStatus",
+    vehicle.status.toUpperCase()
+  );
 
 
-    document.getElementById(
-        "vehiclePanelDelay"
-    ).textContent =
-        "+" + vehicle.delay + " min";
-
-
-    document.getElementById(
-        "vehiclePanelStatus"
-    ).textContent =
-        vehicle.status.toUpperCase();
-
-
-    panel.classList.add("open");
-
-    panel.setAttribute(
-        "aria-hidden",
-        "false"
-    );
+  document
+    .getElementById("vehiclePanel")
+    ?.classList.add("open");
 
 }
 
 
 function closeVehicleDetails() {
 
-    const panel =
-        document.getElementById("vehiclePanel");
-
-    if (!panel) return;
-
-    panel.classList.remove("open");
-
-    panel.setAttribute(
-        "aria-hidden",
-        "true"
-    );
+  document
+    .getElementById("vehiclePanel")
+    ?.classList.remove("open");
 
 }
 
 
-/* =========================================================
-   STATISTICS
-========================================================= */
+/* ================= STATS ================= */
 
 function updateStatistics(data) {
 
-    setCounter(
-        "activeVehicles",
-        data.activeVehicles
-    );
+  const values = [
 
-    setCounter(
-        "activeRoutes",
-        data.activeRoutes
-    );
+    ["activeVehicles", data.activeVehicles],
 
-    setCounter(
-        "onTimeRate",
-        data.onTimeRate,
-        "%"
-    );
+    ["activeRoutes", data.activeRoutes],
 
-    setCounter(
-        "congestedCount",
-        data.congestedRoutes
-    );
+    ["onTime", `${data.onTime}%`],
 
-}
+    ["congestedRoutes", data.congestedRoutes]
+
+  ];
 
 
-function setCounter(
-    id,
-    value,
-    suffix = ""
-) {
+  values.forEach(([id,value]) => {
 
     const element =
-        document.getElementById(id);
+      document.getElementById(id);
 
-    if (!element) return;
+    if (element) {
+      element.textContent = value;
+    }
 
-    element.dataset.count = value;
-
-    element.dataset.suffix = suffix;
-
-    element.textContent =
-        "0" + suffix;
+  });
 
 }
 
 
-/* =========================================================
-   COUNTER ANIMATION
-========================================================= */
+/* ================= ROUTES ================= */
 
-function animateCounters() {
+function renderRouteCards() {
 
-    const counters =
-        document.querySelectorAll(
-            ".count-number, .stat-number"
-        );
+  const container =
+    document.getElementById("routeCards");
+
+  if (!container) return;
 
 
-    counters.forEach(
-        function (counter) {
+  container.innerHTML =
+    Object.entries(routeData)
+      .map(([route, data]) => {
 
-            if (counter.dataset.animated === "true") {
-                return;
-            }
+        return `
 
+          <article
+            class="route-card ${
+              route === selectedRoute
+                ? "selected"
+                : ""
+            }"
+            style="--route-color:${data.color}"
+            onclick="selectRoute('${route}')"
+          >
 
-            const target =
-                Number(counter.dataset.count || 0);
+            <span class="route-no">
+              ${route}
+            </span>
 
-            const suffix =
-                counter.dataset.suffix || "";
+            <span class="route-status">
+              ${data.status}
+            </span>
 
+            <h3>
+              ${data.from} → ${data.to}
+            </h3>
 
-            let current = 0;
+            <p>
+              Hyderabad demo transit corridor with
+              map visualization and live vehicle context.
+            </p>
 
-            const duration = 1300;
+            <div class="route-foot">
+              <span>
+                ${data.vehicles} active vehicles
+              </span>
 
-            const start =
-                performance.now();
+              <span>
+                ${data.eta}
+              </span>
+            </div>
 
+          </article>
 
-            function update(time) {
+        `;
 
-                const progress =
-                    Math.min(
-                        (time - start) / duration,
-                        1
-                    );
+      })
+      .join("");
 
-
-                const eased =
-                    1 -
-                    Math.pow(
-                        1 - progress,
-                        3
-                    );
-
-
-                current =
-                    Math.round(
-                        target * eased
-                    );
-
-
-                counter.textContent =
-                    current + suffix;
-
-
-                if (progress < 1) {
-
-                    requestAnimationFrame(update);
-
-                } else {
-
-                    counter.textContent =
-                        target + suffix;
-
-                    counter.dataset.animated =
-                        "true";
-
-                }
-
-            }
+}
 
 
-            requestAnimationFrame(update);
+function selectRoute(route) {
 
-        }
+  if (!routeData[route]) return;
+
+  selectedRoute = route;
+
+  renderRouteCards();
+
+  const data =
+    routeData[route];
+
+
+  const title =
+    document.getElementById(
+      "selectedRouteTitle"
     );
 
-}
-
-
-/* =========================================================
-   ENVIRONMENT / HEAT RISK
-========================================================= */
-
-function updateCongestion(data) {
-
-    if (!data) return;
-
-    if (typeof data.congestedRoutes === "number") {
-
-        const element =
-            document.getElementById(
-                "congestedCount"
-            );
-
-        if (element) {
-
-            element.dataset.count =
-                data.congestedRoutes;
-
-        }
-
-    }
-
-}
-
-
-function addHeatRiskLayer() {
-
-    if (!map || typeof L === "undefined") {
-        return;
-    }
-
-
-    /*
-       Mock environmental exposure zones.
-
-       These are deliberately approximate demo areas.
-       Backend weather/sensor data can replace them later.
-    */
-
-
-    const zones = [
-
-        {
-            name: "Central Hyderabad",
-            center: [17.385, 78.4867],
-            radius: 850,
-            level: "high"
-        },
-
-        {
-            name: "Secunderabad",
-            center: [17.4399, 78.4983],
-            radius: 700,
-            level: "moderate"
-        },
-
-        {
-            name: "HITEC City",
-            center: [17.4435, 78.3772],
-            radius: 900,
-            level: "extreme"
-        },
-
-        {
-            name: "Mehdipatnam",
-            center: [17.396, 78.4404],
-            radius: 650,
-            level: "high"
-        }
-
-    ];
-
-
-    zones.forEach(
-        function (zone) {
-
-            let fillColor =
-                "#ffc857";
-
-            let strokeColor =
-                "#ffc857";
-
-
-            if (zone.level === "high") {
-
-                fillColor =
-                    "#ff8b3d";
-
-                strokeColor =
-                    "#ff8b3d";
-
-            }
-
-
-            if (zone.level === "extreme") {
-
-                fillColor =
-                    "#ff637d";
-
-                strokeColor =
-                    "#ff637d";
-
-            }
-
-
-            const circle =
-                L.circle(
-                    zone.center,
-                    {
-                        radius: zone.radius,
-
-                        color: strokeColor,
-
-                        weight: 1,
-
-                        opacity: .45,
-
-                        fillColor: fillColor,
-
-                        fillOpacity: .10
-
-                    }
-                );
-
-
-            circle.bindTooltip(
-                `<strong>${zone.name}</strong><br>
-                 Heat risk: ${zone.level.toUpperCase()}`
-            );
-
-
-            circle.addTo(map);
-
-            heatLayers.push(circle);
-
-        }
+  const meta =
+    document.getElementById(
+      "selectedRouteMeta"
     );
 
-}
+
+  if (title) {
+    title.textContent =
+      `${route} • ${data.from} → ${data.to}`;
+  }
 
 
-/* =========================================================
-   MAP SEARCH
-   Local mock search only — no API key / paid API.
-========================================================= */
+  if (meta) {
 
-function toggleMapSearch() {
+    meta.textContent =
+      `${data.status} corridor • ${data.vehicles} active vehicles • ${data.eta}`;
 
-    const panel =
-        document.getElementById(
-            "mapSearchPanel"
-        );
-
-    if (!panel) return;
+  }
 
 
-    panel.classList.toggle("open");
+  drawSelectedRoute();
 
 
-    if (panel.classList.contains("open")) {
+  document
+    .getElementById("transit")
+    ?.scrollIntoView({
+      behavior:"smooth",
+      block:"center"
+    });
 
-        setTimeout(
-            function () {
 
-                const input =
-                    document.getElementById(
-                        "mapSearchInput"
-                    );
-
-                if (input) {
-                    input.focus();
-                }
-
-            },
-            250
-        );
-
-    }
+  setTimeout(() => {
+    focusSelectedRoute();
+  },450);
 
 }
 
 
-function handleMapSearchKey(event) {
+function drawSelectedRoute() {
 
-    if (event.key === "Enter") {
+  if (!map) return;
 
-        searchMapLocation();
 
+  routeLayers.forEach(layer => {
+    map.removeLayer(layer);
+  });
+
+  routeLayers = [];
+
+
+  const data =
+    routeData[selectedRoute];
+
+
+  const line =
+    L.polyline(
+      data.points,
+      {
+        color:data.color,
+        weight:7,
+        opacity:.92,
+        lineCap:"round",
+        lineJoin:"round"
+      }
+    ).addTo(map);
+
+
+  line.bindTooltip(
+    `Route ${selectedRoute}`,
+    {
+      sticky:true,
+      className:"route-line-label"
     }
+  );
+
+
+  routeLayers.push(line);
+
+
+  data.points.forEach((point,index) => {
+
+    const stop =
+      L.circleMarker(
+        point,
+        {
+          radius:
+            index === 0 ||
+            index === data.points.length - 1
+              ? 7
+              : 4,
+
+          color:data.color,
+
+          weight:2,
+
+          fillColor:"#07131c",
+
+          fillOpacity:1
+        }
+      ).addTo(map);
+
+
+    routeLayers.push(stop);
+
+  });
 
 }
 
 
-function searchMapLocation() {
+function focusSelectedRoute() {
 
-    const input =
-        document.getElementById(
-            "mapSearchInput"
-        );
+  if (!map) return;
 
+  const data =
+    routeData[selectedRoute];
 
-    const status =
-        document.getElementById(
-            "mapSearchStatus"
-        );
+  const bounds =
+    L.latLngBounds(data.points);
 
 
-    if (!input || !status || !map) {
-        return;
+  map.fitBounds(
+    bounds,
+    {
+      padding:[55,55],
+      maxZoom:14,
+      animate:true,
+      duration:1.1
+    }
+  );
+
+}
+
+
+/* ================= HEAT RISK ================= */
+
+function addHeatRiskZones() {
+
+  if (!map) return;
+
+
+  heatLayers.forEach(layer => {
+    map.removeLayer(layer);
+  });
+
+  heatLayers = [];
+
+
+  const zones = [
+
+    {
+      name:"Central Hyderabad",
+      lat:17.385,
+      lng:78.477,
+      radius:1700,
+      color:"#f5ca58",
+      opacity:.13
+    },
+
+    {
+      name:"Mehdipatnam Corridor",
+      lat:17.395,
+      lng:78.445,
+      radius:1900,
+      color:"#ff8b62",
+      opacity:.15
+    },
+
+    {
+      name:"Secunderabad Link",
+      lat:17.438,
+      lng:78.505,
+      radius:1750,
+      color:"#ff6575",
+      opacity:.14
     }
 
+  ];
+
+
+  zones.forEach(zone => {
+
+    const circle =
+      L.circle(
+        [zone.lat,zone.lng],
+        {
+          radius:zone.radius,
+          color:zone.color,
+          weight:2,
+          fillColor:zone.color,
+          fillOpacity:zone.opacity
+        }
+      ).addTo(map);
+
+
+    circle.bindTooltip(
+      `${zone.name} • heat exposure zone`,
+      { sticky:true }
+    );
+
+
+    heatLayers.push(circle);
+
+  });
+
+}
+
+
+/* ================= MAP SEARCH ================= */
+
+function setupMapSearch() {
+
+  const input =
+    document.getElementById(
+      "mapSearchInput"
+    );
+
+  const go =
+    document.getElementById(
+      "mapSearchGo"
+    );
+
+  const results =
+    document.getElementById(
+      "mapSearchResults"
+    );
+
+
+  if (!input) return;
+
+
+  function search() {
 
     const query =
-        input.value
-            .trim()
-            .toLowerCase();
+      input.value
+        .trim()
+        .toLowerCase();
 
 
     if (!query) {
 
-        status.textContent =
-            "Enter a Hyderabad place or address.";
+      results.classList.remove(
+        "open"
+      );
 
-        status.className =
-            "error";
+      return;
+    }
 
-        return;
+
+    const matches =
+      searchPlaces
+        .filter(place =>
+          place[0]
+            .toLowerCase()
+            .includes(query)
+        )
+        .slice(0,5);
+
+
+    if (matches.length) {
+
+      results.innerHTML =
+        matches
+          .map(place => `
+            <button
+              type="button"
+              data-name="${place[0]}"
+            >
+              ${place[0]}
+            </button>
+          `)
+          .join("");
+
+    } else {
+
+      results.innerHTML = `
+        <button
+          type="button"
+          data-name="Hyderabad"
+        >
+          Search Hyderabad city
+        </button>
+      `;
 
     }
 
 
-    const result =
-        hyderabadLocations.find(
-            function (location) {
+    results.classList.add("open");
 
-                return location.names.some(
-                    function (name) {
 
-                        return query.includes(name) ||
-                               name.includes(query);
+    results
+      .querySelectorAll("button")
+      .forEach(button => {
 
-                    }
-                );
+        button.onclick = () => {
+          goToPlace(
+            button.dataset.name
+          );
+        };
 
-            }
+      });
+
+  }
+
+
+  go?.addEventListener(
+    "click",
+    search
+  );
+
+
+  input.addEventListener(
+    "input",
+    search
+  );
+
+
+  input.addEventListener(
+    "keydown",
+    event => {
+
+      if (event.key === "Enter") {
+        search();
+      }
+
+    }
+  );
+
+
+  document
+    .getElementById("mapSearchToggle")
+    ?.addEventListener(
+      "click",
+      () => {
+
+        input.focus();
+
+        results.classList.toggle(
+          "open"
         );
 
+      }
+    );
 
-    if (!result) {
-
-        status.textContent =
-            "Demo search: try Charminar, Gachibowli, HITEC City, Kukatpally, Koti, Ameerpet or Secunderabad.";
-
-        status.className =
-            "error";
-
-        return;
-
-    }
+}
 
 
-    status.textContent =
-        "Located: " + result.label;
+function goToPlace(name) {
 
-    status.className =
-        "success";
+  if (!map) return;
+
+
+  const place =
+    searchPlaces.find(
+      item =>
+        item[0].toLowerCase() ===
+        name.toLowerCase()
+    );
+
+
+  if (searchMarker) {
+
+    map.removeLayer(
+      searchMarker
+    );
+
+    searchMarker = null;
+
+  }
+
+
+  if (place) {
+
+    searchMarker =
+      L.marker(
+        [
+          place[1],
+          place[2]
+        ]
+      )
+      .addTo(map)
+      .bindPopup(
+        `<b>${place[0]}</b><br>Hyderabad demo location`
+      )
+      .openPopup();
 
 
     map.flyTo(
-        [
-            result.lat,
-            result.lng
-        ],
-        15,
-        {
-            duration: 1.4
-        }
+      [
+        place[1],
+        place[2]
+      ],
+      15,
+      {
+        duration:1.1
+      }
     );
 
-
-    L.circleMarker(
-        [
-            result.lat,
-            result.lng
-        ],
-        {
-            radius: 9,
-
-            color: "#45e6ff",
-
-            fillColor: "#45e6ff",
-
-            fillOpacity: .25,
-
-            weight: 2
-        }
-    )
-    .addTo(map)
-    .bindTooltip(
-        result.label
-    )
-    .openTooltip();
-
-
-}
-
-
-function resetMapView() {
-
-    if (!map) return;
-
+  } else {
 
     map.flyTo(
-        [17.3850, 78.4867],
-        12,
-        {
-            duration:1.2
-        }
+      [17.385,78.4867],
+      12.6,
+      {
+        duration:1.1
+      }
     );
 
-}
+  }
 
 
-/* =========================================================
-   ROUTE PLANNER
-========================================================= */
-
-function plannerSearch() {
-
-    const from =
-        document.getElementById(
-            "fromLocation"
-        );
-
-    const to =
-        document.getElementById(
-            "toLocation"
-        );
-
-    const result =
-        document.getElementById(
-            "plannerResult"
-        );
-
-
-    if (!from || !to || !result) {
-        return;
-    }
-
-
-    if (!to.value.trim()) {
-
-        result.textContent =
-            "Enter a Hyderabad destination to continue.";
-
-        return;
-
-    }
-
-
-    result.textContent =
-        "Demo route ready — connecting to live routing will be handled by the backend.";
-
-    document
-        .getElementById("transit")
-        ?.scrollIntoView({
-            behavior:"smooth"
-        });
+  closeSearchResults();
 
 }
 
 
-/* =========================================================
-   SCROLL ANIMATIONS
-========================================================= */
+function closeSearchResults() {
 
-function setupScrollReveal() {
+  document
+    .getElementById(
+      "mapSearchResults"
+    )
+    ?.classList.remove("open");
 
-    const elements =
-        document.querySelectorAll(
-            ".reveal"
-        );
-
-
-    if (!("IntersectionObserver" in window)) {
-
-        elements.forEach(
-            function (element) {
-
-                element.classList.add(
-                    "visible"
-                );
-
-            }
-        );
-
-        return;
-
-    }
+}
 
 
-    const observer =
-        new IntersectionObserver(
-            function (entries) {
+/* ================= CHATBOT ================= */
 
-                entries.forEach(
-                    function (entry) {
+function addChatMessage(
+  text,
+  type
+) {
 
-                        if (
-                            entry.isIntersecting
-                        ) {
-
-                            entry.target.classList.add(
-                                "visible"
-                            );
-
-                        }
-
-                    }
-                );
-
-            },
-            {
-                threshold:.12
-            }
-        );
-
-
-    elements.forEach(
-        function (element) {
-
-            observer.observe(element);
-
-        }
+  const box =
+    document.getElementById(
+      "chatMessages"
     );
 
-}
+  if (!box) return;
 
 
-/* =========================================================
-   NAVIGATION
-========================================================= */
-
-function setupNavigation() {
-
-    const sections =
-        document.querySelectorAll(
-            "main section[id]"
-        );
-
-    const links =
-        document.querySelectorAll(
-            ".nav-links a"
-        );
+  const message =
+    document.createElement("div");
 
 
-    if (!sections.length) {
-        return;
-    }
+  message.className =
+    `chat-message ${type}`;
 
 
-    const observer =
-        new IntersectionObserver(
-            function (entries) {
-
-                entries.forEach(
-                    function (entry) {
-
-                        if (
-                            !entry.isIntersecting
-                        ) {
-                            return;
-                        }
+  message.innerHTML = `
+    <b>${type === "user" ? "YOU" : "HAZE AI"}</b>
+    <span></span>
+  `;
 
 
-                        links.forEach(
-                            function (link) {
-
-                                link.classList.remove(
-                                    "active"
-                                );
+  message
+    .querySelector("span")
+    .textContent = text;
 
 
-                                if (
-                                    link.getAttribute("href") ===
-                                    "#" + entry.target.id
-                                ) {
+  box.appendChild(message);
 
-                                    link.classList.add(
-                                        "active"
-                                    );
-
-                                }
-
-                            }
-                        );
-
-                    }
-                );
-
-            },
-            {
-                rootMargin:
-                    "-35% 0px -55% 0px"
-            }
-        );
-
-
-    sections.forEach(
-        function (section) {
-
-            observer.observe(section);
-
-        }
-    );
-
-
-    links.forEach(
-        function (link) {
-
-            link.addEventListener(
-                "click",
-                function () {
-
-                    closeMobileMenu();
-
-                }
-            );
-
-        }
-    );
+  box.scrollTop =
+    box.scrollHeight;
 
 }
 
-
-/* =========================================================
-   MOBILE MENU
-========================================================= */
-
-function toggleMobileMenu() {
-
-    const nav =
-        document.getElementById(
-            "navLinks"
-        );
-
-
-    if (!nav) return;
-
-    nav.classList.toggle("open");
-
-}
-
-
-function closeMobileMenu() {
-
-    const nav =
-        document.getElementById(
-            "navLinks"
-        );
-
-
-    if (!nav) return;
-
-    nav.classList.remove("open");
-
-}
-
-
-/* =========================================================
-   CHATBOT
-========================================================= */
 
 function toggleChat() {
 
-    const chat =
-        document.getElementById(
-            "chatWindow"
-        );
-
-
-    if (!chat) return;
-
-
-    chat.classList.toggle("open");
-
-
-    const isOpen =
-        chat.classList.contains("open");
-
-
-    chat.setAttribute(
-        "aria-hidden",
-        String(!isOpen)
-    );
-
-}
-
-
-function openChat() {
-
-    const chat =
-        document.getElementById(
-            "chatWindow"
-        );
-
-
-    if (!chat) return;
-
-
-    if (!chat.classList.contains("open")) {
-
-        chat.classList.add("open");
-
-    }
-
-
-    chat.setAttribute(
-        "aria-hidden",
-        "false"
-    );
-
-
-    const input =
-        document.getElementById(
-            "chatInput"
-        );
-
-
-    if (input) {
-
-        setTimeout(
-            function () {
-
-                input.focus();
-
-            },
-            250
-        );
-
-    }
+  document
+    .getElementById("chatPanel")
+    ?.classList.toggle("open");
 
 }
 
 
 function handleChatKey(event) {
 
-    if (event.key === "Enter") {
-
-        sendChatMessage();
-
-    }
+  if (event.key === "Enter") {
+    sendChatMessage();
+  }
 
 }
 
 
-function quickChat(message) {
+function quickAsk(text) {
 
-    const input =
-        document.getElementById(
-            "chatInput"
-        );
+  const input =
+    document.getElementById(
+      "chatInput"
+    );
 
+  if (input) {
+    input.value = text;
+  }
 
-    if (!input) return;
-
-
-    input.value = message;
-
-    sendChatMessage();
+  sendChatMessage();
 
 }
 
 
 function sendChatMessage() {
 
-    const input =
-        document.getElementById(
-            "chatInput"
-        );
+  const input =
+    document.getElementById(
+      "chatInput"
+    );
+
+  if (!input) return;
 
 
-    if (!input) return;
+  const text =
+    input.value.trim();
 
 
-    const message =
-        input.value.trim();
+  if (!text) return;
 
 
-    if (!message) return;
+  addChatMessage(
+    text,
+    "user"
+  );
+
+
+  input.value = "";
+
+
+  setTimeout(() => {
+
+    const query =
+      text.toLowerCase();
+
+
+    let answer =
+      "Demo mode: I can help with Hyderabad transit, routes, congestion and heat-risk information.";
+
+
+    if (
+      query.includes("busy") ||
+      query.includes("congestion")
+    ) {
+
+      answer =
+        "Routes 218 and 10H are currently flagged for attention in the demo network. Route 218 has the strongest congestion signal.";
+
+    }
+
+    else if (
+      query.includes("heat")
+    ) {
+
+      answer =
+        "Hyderabad demo heat risk is HIGH: 39°C, feels like 44°C, with 12 affected stops and 4 high-exposure routes.";
+
+    }
+
+    else if (
+      query.includes("route") ||
+      query.includes("bus")
+    ) {
+
+      answer =
+        "Try routes 25A, 218, 10H or 5K. Tap a route card to highlight its corridor directly on the Hyderabad map.";
+
+    }
 
 
     addChatMessage(
-        message,
-        "user"
+      answer,
+      "bot"
     );
 
-
-    input.value = "";
-
-
-    setTimeout(
-        function () {
-
-            const lower =
-                message.toLowerCase();
-
-
-            let response =
-                "Demo mode: HAZE is ready to help with Hyderabad mobility.";
-
-
-            if (
-                lower.includes("route") ||
-                lower.includes("bus")
-            ) {
-
-                response =
-                    "HAZE currently shows 142 demo vehicles across 24 active routes.";
-
-            }
-
-
-            if (
-                lower.includes("traffic") ||
-                lower.includes("congestion")
-            ) {
-
-                response =
-                    "Current demo data shows 4 congested routes.";
-
-            }
-
-
-            if (
-                lower.includes("heat") ||
-                lower.includes("temperature") ||
-                lower.includes("hot")
-            ) {
-
-                response =
-                    "Current mock environmental data shows 39°C, feels like 44°C, with HIGH heat risk.";
-
-            }
-
-
-            if (
-                lower.includes("stop")
-            ) {
-
-                response =
-                    "The current mock heat model identifies 12 potentially affected transit stops.";
-
-            }
-
-
-            addChatMessage(
-                response,
-                "bot"
-            );
-
-        },
-        450
-    );
-
-
-    /*
-        FUTURE BACKEND CONNECTION
-
-        GET  /api/vehicles
-        GET  /api/routes
-        GET  /api/congestion
-        GET  /api/stats
-        GET  /api/environment
-        POST /api/chat
-
-        Never place private API keys here.
-    */
+  },420);
 
 }
 
 
-function addChatMessage(
-    text,
-    type = "bot"
-) {
+/* ================= NAVIGATION ================= */
 
-    const messages =
-        document.getElementById(
-            "chatMessages"
-        );
+function scrollToId(id) {
 
-
-    if (!messages) return;
-
-
-    const message =
-        document.createElement(
-            "div"
-        );
-
-
-    message.className =
-        "chat-message " + type;
-
-
-    if (type === "bot") {
-
-        message.innerHTML =
-            `<span>H</span>
-             <p>${escapeHTML(text)}</p>`;
-
-    } else {
-
-        message.innerHTML =
-            `<p>${escapeHTML(text)}</p>`;
-
-    }
-
-
-    messages.appendChild(message);
-
-
-    messages.scrollTop =
-        messages.scrollHeight;
-
-}
-
-
-function escapeHTML(text) {
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-
-    div.textContent =
-        text;
-
-
-    return div.innerHTML;
-
-}
-
-
-/* =========================================================
-   BOT WINK
-========================================================= */
-
-function startBotWink() {
-
-    const bot =
-        document.getElementById(
-            "chatFab"
-        );
-
-
-    if (!bot) return;
-
-
-    function wink() {
-
-        bot.classList.add(
-            "winking"
-        );
-
-
-        setTimeout(
-            function () {
-
-                bot.classList.remove(
-                    "winking"
-                );
-
-            },
-            180
-        );
-
-    }
-
-
-    setInterval(
-        wink,
-        4800
-    );
-
-}
-
-
-/* =========================================================
-   SCROLL TO TRANSIT
-========================================================= */
-
-function scrollToTransit() {
-
-    const section =
-        document.getElementById(
-            "transit"
-        );
-
-
-    if (!section) return;
-
-
-    section.scrollIntoView({
-        behavior:"smooth"
+  document
+    .getElementById(id)
+    ?.scrollIntoView({
+      behavior:"smooth"
     });
 
+}
+
+
+function setupReveal() {
+
+  const observer =
+    new IntersectionObserver(
+      entries => {
+
+        entries.forEach(entry => {
+
+          if (entry.isIntersecting) {
+
+            entry.target
+              .classList
+              .add("visible");
+
+            observer.unobserve(
+              entry.target
+            );
+
+          }
+
+        });
+
+      },
+      {
+        threshold:.12
+      }
+    );
+
+
+  document
+    .querySelectorAll(".reveal")
+    .forEach(element => {
+      observer.observe(element);
+    });
+
+}
+
+
+/* ================= ACTIVE NAV ================= */
+
+function setupNavigation() {
+
+  const sections =
+    [
+      ...document.querySelectorAll(
+        "main section[id]"
+      )
+    ];
+
+  const links =
+    [
+      ...document.querySelectorAll(
+        ".nav-link"
+      )
+    ];
+
+
+  const observer =
+    new IntersectionObserver(
+      entries => {
+
+        entries.forEach(entry => {
+
+          if (entry.isIntersecting) {
+
+            links.forEach(link => {
+
+              link.classList.toggle(
+                "active",
+                link.getAttribute("href") ===
+                `#${entry.target.id}`
+              );
+
+            });
+
+          }
+
+        });
+
+      },
+      {
+        rootMargin:
+          "-35% 0px -55%"
+      }
+    );
+
+
+  sections.forEach(section => {
+    observer.observe(section);
+  });
+
+}
+
+
+/* ================= MOBILE MENU ================= */
+
+function setupMobileMenu() {
+
+  const button =
+    document.getElementById(
+      "menuToggle"
+    );
+
+  const menu =
+    document.getElementById(
+      "mobileMenu"
+    );
+
+
+  button?.addEventListener(
+    "click",
+    () => {
+      menu?.classList.toggle("open");
+    }
+  );
+
+
+  menu
+    ?.querySelectorAll("a")
+    .forEach(link => {
+
+      link.addEventListener(
+        "click",
+        () => {
+          menu.classList.remove(
+            "open"
+          );
         }
+      );
+
+    });
+
+}
+
+
+/* ================= COUNTERS ================= */
+
+function animateCounters() {
+
+  document
+    .querySelectorAll(
+      "[data-counter]"
+    )
+    .forEach(element => {
+
+      const target =
+        Number(
+          element.dataset.counter || 0
+        );
+
+      const suffix =
+        element.dataset.suffix || "";
+
+      const duration =
+        1100;
+
+      const startTime =
+        performance.now();
+
+
+      function tick(now) {
+
+        const progress =
+          Math.min(
+            (now - startTime) /
+            duration,
+            1
+          );
+
+
+        const eased =
+          1 -
+          Math.pow(
+            1 - progress,
+            3
+          );
+
+
+        const value =
+          Math.round(
+            target * eased
+          );
+
+
+        element.textContent =
+          `${value}${suffix}`;
+
+
+        if (progress < 1) {
+          requestAnimationFrame(tick);
+        }
+
+      }
+
+
+      requestAnimationFrame(tick);
+
+    });
+
+}
+
+
+/*
+  Future backend contracts only:
+
+  GET  /api/vehicles
+  GET  /api/routes
+  GET  /api/congestion
+  GET  /api/stats
+  GET  /api/environment
+  POST /api/chat
+
+  No API keys are required by this frontend demo.
+*/
