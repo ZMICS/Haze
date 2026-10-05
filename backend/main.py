@@ -12,3 +12,5 @@ def health_check():
       "status": "online",
       "project": "HAZE"
     }
+
+
