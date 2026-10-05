@@ -1,1067 +1,1430 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="theme-color" content="#061018">
-<title>HAZE — Hyderabad Advanced Zone & Express Transit</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="style.css">
+  <meta
+    name="description"
+    content="HAZE — Hyderabad Advanced Zone & Express Transit"
+  >
+
+  <title>HAZE — Hyderabad Advanced Zone & Express Transit</title>
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  >
+
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<header class="navbar" id="navbar">
+  <!-- ================= NAVBAR ================= -->
 
-  <a href="#home" class="brand" aria-label="HAZE home">
-    <span class="brand-mark">
-      <img src="logo.png" alt="HAZE logo">
-    </span>
+  <header class="navbar">
 
-    <span class="brand-copy">
-      <strong>HAZE</strong>
-      <small>HYDERABAD ADVANCED ZONE &amp; EXPRESS TRANSIT</small>
-    </span>
-  </a>
+    <a href="#home" class="brand">
 
-  <nav class="desktop-nav" aria-label="Primary navigation">
-    <a class="nav-link active" href="#home">Home</a>
-    <a class="nav-link" href="#transit">Live Transit</a>
-    <a class="nav-link" href="#routes">Routes</a>
-    <a class="nav-link" href="#analytics">Analytics</a>
-    <a class="nav-link" href="#environment">Environment</a>
-    <a class="nav-link" href="#assistant">AI Assistant</a>
-    <a class="nav-link" href="#about">About</a>
-  </nav>
+      <div class="brand-logo">
+        <img src="logo.png" alt="HAZE">
+      </div>
 
-  <div class="nav-actions">
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-      <span>☾</span>
-    </button>
-
-    <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
-      <i></i>
-      <i></i>
-      <i></i>
-    </button>
-  </div>
-
-</header>
-
-<div class="mobile-menu" id="mobileMenu">
-  <a href="#home">Home</a>
-  <a href="#transit">Live Transit</a>
-  <a href="#routes">Routes</a>
-  <a href="#analytics">Analytics</a>
-  <a href="#environment">Environment</a>
-  <a href="#assistant">AI Assistant</a>
-  <a href="#about">About</a>
-</div>
-
-
-<main>
-
-<!-- ================= HERO ================= -->
-
-<section class="hero" id="home">
-
-  <div class="hero-image"></div>
-  <div class="hero-shade"></div>
-  <div class="hero-grid"></div>
-
-  <div class="hero-content reveal">
-
-    <div class="hero-eyebrow">
-      <span class="pulse-dot"></span>
-      HYDERABAD • TELANGANA
-    </div>
-
-    <h1>
-      Move Smarter<br>
-      <em>Through Your City.</em>
-    </h1>
-
-    <p>
-      HAZE turns Hyderabad's urban transportation data into
-      intelligent, real-time mobility insights for a faster,
-      clearer and more connected city.
-    </p>
-
-    <div class="hero-actions">
-      <button class="primary-btn" onclick="scrollToId('transit')">
-        Explore Live Transit <span>→</span>
-      </button>
-
-      <button class="secondary-btn" onclick="scrollToId('routes')">
-        Plan Your Route <span>↗</span>
-      </button>
-    </div>
-
-    <div class="hero-status">
-      <span>
-        <b class="live-dot"></b>
-        SYSTEM ONLINE
-      </span>
-
-      <i></i>
-
-      <span>REAL-TIME NETWORK</span>
-    </div>
-
-  </div>
-
-
-  <div class="hero-metrics reveal delay-1">
-
-    <div>
-      <strong data-counter="142">0</strong>
-      <span>Active Vehicles</span>
-    </div>
-
-    <div>
-      <strong data-counter="24">0</strong>
-      <span>Active Routes</span>
-    </div>
-
-    <div>
-      <strong data-counter="87" data-suffix="%">0</strong>
-      <span>On-Time Rate</span>
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- ================= LIVE TRANSIT ================= -->
-
-<section class="section" id="transit">
-
-  <div class="section-heading reveal">
-
-    <div>
-      <span>01 / LIVE TRANSIT</span>
-
-      <h2>
-        City Mobility
-        <em>In Real-Time.</em>
-      </h2>
-
-      <p>
-        Monitor Hyderabad's demo transit network,
-        vehicle movement and congestion from one intelligent view.
-      </p>
-    </div>
-
-    <div class="broadcast-live">
-      <b></b>
-      <strong>LIVE</strong>
-    </div>
-
-  </div>
-
-
-  <div class="dashboard glass reveal delay-1">
-
-    <aside class="dashboard-sidebar">
-
-      <div class="mini-brand">
-        <span class="mini-mark">
-          <img src="logo.png" alt="">
-        </span>
-
+      <div class="brand-text">
         <strong>HAZE</strong>
+        <span>HYDERABAD ADVANCED ZONE &amp; EXPRESS TRANSIT</span>
       </div>
 
-      <a class="side-link active" href="#transit">
-        ◈ Dashboard
-      </a>
-
-      <a class="side-link" href="#transit">
-        ◉ Live Transit
-      </a>
-
-      <a class="side-link" href="#routes">
-        ▣ Routes
-      </a>
-
-      <a class="side-link" href="#analytics">
-        ◌ Analytics
-      </a>
-
-      <a class="side-link" href="#environment">
-        ◍ Environment
-      </a>
-
-      <a class="side-link" href="#assistant">
-        ✦ AI Assistant
-      </a>
-
-      <div class="side-health">
-        <span></span>
-        Network operational
-        <br>
-        <b>Hyderabad • Demo mode</b>
-      </div>
-
-    </aside>
+    </a>
 
 
-    <div class="dashboard-main">
+    <nav class="desktop-nav">
 
-      <div class="stat-grid">
+      <a href="#home" class="nav-link active">Home</a>
+      <a href="#transit" class="nav-link">Live Transit</a>
+      <a href="#routes" class="nav-link">Routes</a>
+      <a href="#analytics" class="nav-link">Analytics</a>
+      <a href="#environment" class="nav-link">Environment</a>
+      <a href="#assistant" class="nav-link">AI Assistant</a>
+      <a href="#about" class="nav-link">About</a>
 
-        <article class="stat-card">
-          <small>ACTIVE VEHICLES</small>
-          <strong id="activeVehicles">142</strong>
-          <span>● Operating now</span>
-        </article>
-
-        <article class="stat-card">
-          <small>ACTIVE ROUTES</small>
-          <strong id="activeRoutes">24</strong>
-          <span>● Network coverage</span>
-        </article>
-
-        <article class="stat-card">
-          <small>ON-TIME PERFORMANCE</small>
-          <strong id="onTime">87%</strong>
-          <span>● Network performance</span>
-        </article>
-
-        <article class="stat-card warning">
-          <small>ROUTES REQUIRING ATTENTION</small>
-          <strong id="congestedRoutes">4</strong>
-          <span>● Congestion watch</span>
-        </article>
-
-      </div>
+    </nav>
 
 
-      <div class="map-card">
+    <div class="nav-right">
 
-        <div class="map-head">
+      <button
+        class="theme-toggle"
+        id="themeToggle"
+        aria-label="Toggle theme"
+      >
+        <span>☾</span>
+      </button>
 
-          <div>
-            <small>HYDERABAD TRANSIT INTELLIGENCE</small>
-            <h3>Live Mobility Network</h3>
-          </div>
+      <button
+        class="menu-toggle"
+        id="menuToggle"
+        aria-label="Open menu"
+      >
+        <i></i>
+        <i></i>
+        <i></i>
+      </button>
 
-          <span class="map-live">
-            <b></b>
-            LIVE NETWORK
-          </span>
+    </div>
+
+  </header>
+
+
+  <!-- MOBILE MENU -->
+
+  <div class="mobile-menu" id="mobileMenu">
+
+    <a href="#home">Home</a>
+    <a href="#transit">Live Transit</a>
+    <a href="#routes">Routes</a>
+    <a href="#analytics">Analytics</a>
+    <a href="#environment">Environment</a>
+    <a href="#assistant">AI Assistant</a>
+    <a href="#about">About</a>
+
+  </div>
+
+
+  <main>
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero" id="home">
+
+      <div class="hero-photo"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-grid"></div>
+
+
+      <div class="hero-content reveal">
+
+        <div class="hero-location">
+
+          <span class="location-dot"></span>
+
+          HYDERABAD • TELANGANA
 
         </div>
 
 
-        <div class="map-wrap">
+        <h1>
+          Move Smarter
+          <br>
+          <em>Through Your City.</em>
+        </h1>
 
-          <div class="map-search-control">
-
-            <button id="mapSearchToggle" aria-label="Search Hyderabad">
-              ⌕
-            </button>
-
-            <input
-              id="mapSearchInput"
-              placeholder="Search Hyderabad"
-              autocomplete="off"
-            >
-
-            <button id="mapSearchGo">
-              Search
-            </button>
-
-            <div id="mapSearchResults"></div>
-
-          </div>
-
-
-          <div id="map"></div>
-
-
-          <div class="map-legend">
-
-            <span>
-              <i class="legend-bus normal"></i>
-              Normal
-            </span>
-
-            <span>
-              <i class="legend-bus delayed"></i>
-              Delayed
-            </span>
-
-            <span>
-              <i class="legend-bus congested"></i>
-              Congested
-            </span>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- ================= ROUTES ================= -->
-
-<section class="section alt" id="routes">
-
-  <div class="section-heading reveal">
-
-    <div>
-
-      <span>02 / ROUTE INTELLIGENCE</span>
-
-      <h2>
-        Popular Routes
-        <em>Across Hyderabad.</em>
-      </h2>
-
-      <p>
-        Choose a route to visualize its demo corridor
-        directly on the Hyderabad map.
-      </p>
-
-    </div>
-
-  </div>
-
-
-  <div class="route-cards reveal delay-1" id="routeCards"></div>
-
-
-  <div class="route-map-preview glass reveal delay-2">
-
-    <div>
-
-      <small>SELECTED ROUTE</small>
-
-      <h3 id="selectedRouteTitle">
-        25A • Secunderabad → Mehdipatnam
-      </h3>
-
-      <p id="selectedRouteMeta">
-        On-time corridor • 4 active vehicles
-      </p>
-
-    </div>
-
-    <button class="secondary-btn" onclick="focusSelectedRoute()">
-      Show on Hyderabad Map →
-    </button>
-
-  </div>
-
-</section>
-
-
-<!-- ================= ANALYTICS ================= -->
-
-<section class="section" id="analytics">
-
-  <div class="section-heading reveal">
-
-    <div>
-
-      <span>03 / NETWORK ANALYTICS</span>
-
-      <h2>
-        Understand Your
-        <em>City.</em>
-      </h2>
-
-      <p>
-        Demo intelligence that turns transit activity
-        into simple, useful signals.
-      </p>
-
-    </div>
-
-  </div>
-
-
-  <div class="analytics-grid reveal delay-1">
-
-    <article class="analytics-card large glass">
-
-      <div class="card-top">
-
-        <div>
-          <small>WEEKLY TRANSIT ACTIVITY</small>
-          <h3>Vehicle Activity</h3>
-        </div>
-
-        <b>+12.4%</b>
-
-      </div>
-
-
-      <div class="bars">
-        <i style="height:48%"></i>
-        <i style="height:66%"></i>
-        <i style="height:57%"></i>
-        <i style="height:80%"></i>
-        <i style="height:72%"></i>
-        <i style="height:92%"></i>
-        <i style="height:76%"></i>
-      </div>
-
-
-      <div class="bar-labels">
-        <span>Mon</span>
-        <span>Tue</span>
-        <span>Wed</span>
-        <span>Thu</span>
-        <span>Fri</span>
-        <span>Sat</span>
-        <span>Sun</span>
-      </div>
-
-    </article>
-
-
-    <article class="analytics-card glass">
-
-      <small>NETWORK RELIABILITY</small>
-
-      <strong class="big-number">87%</strong>
-
-      <p>Current on-time performance</p>
-
-      <div class="progress">
-        <i style="width:87%"></i>
-      </div>
-
-      <span class="good-text">
-        Stable network
-      </span>
-
-    </article>
-
-
-    <article class="analytics-card glass">
-
-      <small>CONGESTION INDEX</small>
-
-      <strong class="big-number">4.2</strong>
-
-      <p>Moderate city congestion</p>
-
-      <div class="index-line">
-        <i style="width:62%"></i>
-      </div>
-
-      <span class="warn-text">
-        Watch selected corridors
-      </span>
-
-    </article>
-
-  </div>
-
-</section>
-
-
-<!-- ================= ENVIRONMENT ================= -->
-
-<section class="section environment-section" id="environment">
-
-  <div class="section-heading reveal">
-
-    <div>
-
-      <span>04 / ENVIRONMENTAL INTELLIGENCE</span>
-
-      <h2>
-        Heat Risk
-        <em>Across the Network.</em>
-      </h2>
-
-      <p>
-        Mock environmental intelligence showing how heat
-        exposure can affect Hyderabad transit corridors.
-      </p>
-
-    </div>
-
-    <div class="demo-badge">
-      DEMO ENVIRONMENT DATA
-    </div>
-
-  </div>
-
-
-  <div class="environment-top reveal delay-1">
-
-
-    <article class="risk-hero glass">
-
-      <div class="risk-copy">
-
-        <small>CURRENT HEAT RISK</small>
-
-        <strong>HIGH</strong>
 
         <p>
-          Elevated heat exposure detected across
-          selected transit corridors.
+          HAZE transforms urban transportation data into
+          intelligent, real-time mobility insights for
+          Hyderabad.
         </p>
 
+
+        <div class="hero-buttons">
+
+          <button
+            class="primary-button"
+            onclick="scrollToSection('transit')"
+          >
+            Explore Live Transit
+            <span>→</span>
+          </button>
+
+
+          <button
+            class="secondary-button"
+            onclick="scrollToSection('routes')"
+          >
+            Plan Your Route
+            <span>↗</span>
+          </button>
+
+        </div>
+
+
+        <div class="hero-status">
+
+          <span>
+            <i></i>
+            SYSTEM ONLINE
+          </span>
+
+          <b></b>
+
+          <span>
+            REAL-TIME NETWORK
+          </span>
+
+        </div>
+
       </div>
 
 
-      <div class="risk-meter">
+      <div class="hero-stats reveal delay-1">
 
-        <div class="meter-track">
-          <span></span>
+        <div>
+          <strong data-counter="142">0</strong>
+          <span>Active Vehicles</span>
         </div>
 
-        <div class="meter-labels">
-          <span>LOW</span>
-          <span>MODERATE</span>
-          <span>HIGH</span>
-          <span>EXTREME</span>
+        <div>
+          <strong data-counter="24">0</strong>
+          <span>Active Routes</span>
+        </div>
+
+        <div>
+          <strong data-counter="87" data-suffix="%">0</strong>
+          <span>On-Time Rate</span>
         </div>
 
       </div>
 
-    </article>
+    </section>
 
 
-    <article class="weather-card glass">
+    <!-- ================= LIVE TRANSIT ================= -->
 
-      <div class="weather-main">
+    <section class="section" id="transit">
 
-        <span class="weather-icon">☀</span>
+      <div class="section-heading reveal">
 
         <div>
 
-          <small>HYDERABAD NOW</small>
+          <span class="section-label">
+            01 / LIVE TRANSIT
+          </span>
 
-          <strong>39°C</strong>
+          <h2>
+            City Mobility
+            <em>In Real-Time.</em>
+          </h2>
 
-          <span>Feels like 44°C</span>
+          <p>
+            Monitor Hyderabad's demo transit network,
+            vehicle movement and congestion from one
+            intelligent view.
+          </p>
+
+        </div>
+
+
+        <!-- TV STYLE LIVE -->
+
+        <div class="broadcast-live">
+
+          <i></i>
+
+          <strong>LIVE</strong>
 
         </div>
 
       </div>
 
 
-      <div class="weather-foot">
+      <div class="dashboard glass reveal delay-1">
 
-        <span>Heat exposure</span>
-        <b>HIGH</b>
+
+        <!-- SIDEBAR -->
+
+        <aside class="dashboard-sidebar">
+
+          <div class="dashboard-brand">
+
+            <div class="dashboard-logo">
+              <img src="logo.png" alt="">
+            </div>
+
+            <strong>HAZE</strong>
+
+          </div>
+
+
+          <a href="#transit" class="side-link active">
+            ◈ Dashboard
+          </a>
+
+          <a href="#transit" class="side-link">
+            ◉ Live Transit
+          </a>
+
+          <a href="#routes" class="side-link">
+            ▣ Routes
+          </a>
+
+          <a href="#analytics" class="side-link">
+            ◌ Analytics
+          </a>
+
+          <a href="#environment" class="side-link">
+            ◍ Environment
+          </a>
+
+          <a href="#assistant" class="side-link">
+            ✦ AI Assistant
+          </a>
+
+
+          <div class="network-status">
+
+            <i></i>
+
+            Network operational
+
+            <strong>
+              Hyderabad • Demo Mode
+            </strong>
+
+          </div>
+
+        </aside>
+
+
+        <!-- DASHBOARD -->
+
+        <div class="dashboard-content">
+
+
+          <div class="stat-grid">
+
+            <article class="stat-card">
+
+              <small>ACTIVE VEHICLES</small>
+
+              <strong id="activeVehicles">
+                142
+              </strong>
+
+              <span>● Operating now</span>
+
+            </article>
+
+
+            <article class="stat-card">
+
+              <small>ACTIVE ROUTES</small>
+
+              <strong id="activeRoutes">
+                24
+              </strong>
+
+              <span>● Network coverage</span>
+
+            </article>
+
+
+            <article class="stat-card">
+
+              <small>ON-TIME PERFORMANCE</small>
+
+              <strong id="onTime">
+                87%
+              </strong>
+
+              <span>● Network performance</span>
+
+            </article>
+
+
+            <article class="stat-card warning">
+
+              <small>ROUTES REQUIRING ATTENTION</small>
+
+              <strong id="congestedRoutes">
+                4
+              </strong>
+
+              <span>● Routes affected</span>
+
+            </article>
+
+          </div>
+
+
+          <!-- MAP -->
+
+          <div class="map-card">
+
+            <div class="map-header">
+
+              <div>
+
+                <small>
+                  HYDERABAD TRANSIT INTELLIGENCE
+                </small>
+
+                <h3>
+                  Live Mobility Network
+                </h3>
+
+              </div>
+
+
+              <span class="map-live">
+
+                <i></i>
+
+                LIVE NETWORK
+
+              </span>
+
+            </div>
+
+
+            <div class="map-container">
+
+              <!-- SEARCH IS SEPARATE FROM LEAFLET ZOOM -->
+
+              <div class="map-search">
+
+                <button
+                  id="mapSearchToggle"
+                  type="button"
+                >
+                  ⌕
+                </button>
+
+                <input
+                  id="mapSearchInput"
+                  type="text"
+                  placeholder="Search Hyderabad"
+                  autocomplete="off"
+                >
+
+                <button
+                  id="mapSearchGo"
+                  type="button"
+                >
+                  Search
+                </button>
+
+
+                <div
+                  id="mapSearchResults"
+                  class="search-results"
+                ></div>
+
+              </div>
+
+
+              <div id="map"></div>
+
+
+              <div class="map-legend">
+
+                <span>
+                  <i class="normal"></i>
+                  Normal
+                </span>
+
+                <span>
+                  <i class="delayed"></i>
+                  Delayed
+                </span>
+
+                <span>
+                  <i class="congested"></i>
+                  Congested
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
 
       </div>
 
-    </article>
+    </section>
 
 
-    <article class="risk-index-card glass">
+    <!-- ================= ROUTES ================= -->
 
-      <small>RISK INDEX</small>
+    <section class="section alternate" id="routes">
+
+      <div class="section-heading reveal">
+
+        <div>
+
+          <span class="section-label">
+            02 / ROUTE INTELLIGENCE
+          </span>
+
+          <h2>
+            Popular Routes
+            <em>Across Hyderabad.</em>
+          </h2>
+
+          <p>
+            Select a route to visualize its demo corridor
+            directly on the Hyderabad map.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="route-cards reveal delay-1"
+        id="routeCards"
+      ></div>
+
+
+      <div class="selected-route glass reveal delay-2">
+
+        <div>
+
+          <small>SELECTED ROUTE</small>
+
+          <h3 id="selectedRouteTitle">
+            25A • Secunderabad → Mehdipatnam
+          </h3>
+
+          <p id="selectedRouteMeta">
+            ON TIME corridor • 4 active vehicles • 32 min
+          </p>
+
+        </div>
+
+
+        <button
+          class="secondary-button"
+          onclick="focusSelectedRoute()"
+        >
+          Show on Hyderabad Map →
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= ANALYTICS ================= -->
+
+    <section class="section" id="analytics">
+
+      <div class="section-heading reveal">
+
+        <div>
+
+          <span class="section-label">
+            03 / NETWORK ANALYTICS
+          </span>
+
+          <h2>
+            Understand Your
+            <em>City.</em>
+          </h2>
+
+          <p>
+            Demo intelligence that turns transit activity
+            into simple, useful signals.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="analytics-grid reveal delay-1">
+
+
+        <article class="analytics-card large glass">
+
+          <div class="analytics-head">
+
+            <div>
+
+              <small>
+                WEEKLY TRANSIT ACTIVITY
+              </small>
+
+              <h3>
+                Vehicle Activity
+              </h3>
+
+            </div>
+
+            <strong>+12.4%</strong>
+
+          </div>
+
+
+          <div class="activity-bars">
+
+            <i style="height:48%"></i>
+            <i style="height:66%"></i>
+            <i style="height:57%"></i>
+            <i style="height:80%"></i>
+            <i style="height:72%"></i>
+            <i style="height:92%"></i>
+            <i style="height:76%"></i>
+
+          </div>
+
+
+          <div class="bar-days">
+
+            <span>Mon</span>
+            <span>Tue</span>
+            <span>Wed</span>
+            <span>Thu</span>
+            <span>Fri</span>
+            <span>Sat</span>
+            <span>Sun</span>
+
+          </div>
+
+        </article>
+
+
+        <article class="analytics-card glass">
+
+          <small>
+            NETWORK RELIABILITY
+          </small>
+
+          <strong class="big-number">
+            87%
+          </strong>
+
+          <p>
+            Current on-time performance
+          </p>
+
+          <div class="progress">
+            <i style="width:87%"></i>
+          </div>
+
+          <span class="green-text">
+            Stable network
+          </span>
+
+        </article>
+
+
+        <article class="analytics-card glass">
+
+          <small>
+            CONGESTION INDEX
+          </small>
+
+          <strong class="big-number">
+            4.2
+          </strong>
+
+          <p>
+            Moderate city congestion
+          </p>
+
+          <div class="progress">
+            <i style="width:62%"></i>
+          </div>
+
+          <span class="yellow-text">
+            Watch selected corridors
+          </span>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= ENVIRONMENT ================= -->
+
+    <section
+      class="section environment-section"
+      id="environment"
+    >
+
+      <div class="section-heading reveal">
+
+        <div>
+
+          <span class="section-label">
+            04 / ENVIRONMENTAL INTELLIGENCE
+          </span>
+
+          <h2>
+            Heat Risk
+            <em>Across the Network.</em>
+          </h2>
+
+          <p>
+            Environmental intelligence showing how heat
+            exposure can affect Hyderabad transit corridors.
+          </p>
+
+        </div>
+
+
+        <span class="demo-tag">
+          DEMO ENVIRONMENT DATA
+        </span>
+
+      </div>
+
+
+      <div class="environment-top reveal delay-1">
+
+
+        <!-- HEAT RISK -->
+
+        <article class="risk-card glass">
+
+          <small>
+            CURRENT HEAT RISK
+          </small>
+
+          <strong>
+            HIGH
+          </strong>
+
+          <p>
+            Elevated heat exposure has been detected
+            across selected Hyderabad transit corridors.
+          </p>
+
+
+          <div class="risk-meter">
+
+            <div class="risk-bar">
+              <span></span>
+            </div>
+
+            <div class="risk-labels">
+
+              <span>LOW</span>
+              <span>MODERATE</span>
+              <span>HIGH</span>
+              <span>EXTREME</span>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- WEATHER -->
+
+        <article class="weather-card glass">
+
+          <div class="weather-main">
+
+            <div class="sun-icon">
+              ☀
+            </div>
+
+            <div>
+
+              <small>
+                HYDERABAD NOW
+              </small>
+
+              <strong>
+                39°C
+              </strong>
+
+              <span>
+                Feels like 44°C
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="weather-bottom">
+
+            <span>
+              Heat exposure
+            </span>
+
+            <b>
+              HIGH
+            </b>
+
+          </div>
+
+        </article>
+
+
+        <!-- RISK INDEX -->
+
+        <article class="risk-index glass">
+
+          <small>
+            RISK INDEX
+          </small>
+
+          <div class="risk-number">
+
+            <strong>
+              82
+            </strong>
+
+            <span>
+              / 100
+            </span>
+
+          </div>
+
+          <p>
+            Environmental exposure index
+          </p>
+
+
+          <div class="risk-circle">
+
+            <span>
+              82
+            </span>
+
+          </div>
+
+        </article>
+
+      </div>
+
+
+      <!-- LOWER ENVIRONMENT -->
+
+      <div class="environment-bottom reveal delay-2">
+
+
+        <article class="heat-zones glass">
+
+          <div class="heat-zones-header">
+
+            <div>
+
+              <small>
+                TRANSIT EXPOSURE
+              </small>
+
+              <h3>
+                Heat Risk Zones
+              </h3>
+
+              <p>
+                Highlighted areas show simulated
+                high-exposure zones around Hyderabad
+                transit corridors.
+              </p>
+
+            </div>
+
+
+            <div class="risk-legend">
+
+              <span>
+                <i class="moderate"></i>
+                Moderate
+              </span>
+
+              <span>
+                <i class="high"></i>
+                High
+              </span>
+
+              <span>
+                <i class="extreme"></i>
+                Extreme
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="zone-list">
+
+
+            <div class="zone">
+
+              <i class="zone-dot moderate"></i>
+
+              <div>
+                <strong>
+                  Central Hyderabad
+                </strong>
+
+                <span>
+                  Moderate exposure • 4 stops
+                </span>
+              </div>
+
+              <b>
+                62
+              </b>
+
+            </div>
+
+
+            <div class="zone">
+
+              <i class="zone-dot high"></i>
+
+              <div>
+                <strong>
+                  Mehdipatnam Corridor
+                </strong>
+
+                <span>
+                  High exposure • 5 stops
+                </span>
+              </div>
+
+              <b>
+                82
+              </b>
+
+            </div>
+
+
+            <div class="zone">
+
+              <i class="zone-dot extreme"></i>
+
+              <div>
+                <strong>
+                  Secunderabad Link
+                </strong>
+
+                <span>
+                  Extreme exposure • 3 stops
+                </span>
+              </div>
+
+              <b>
+                91
+              </b>
+
+            </div>
+
+          </div>
+
+
+          <div class="environment-note">
+
+            ✦ Environmental values are simulated for this
+            frontend demo. Backend weather data can replace
+            them later.
+
+          </div>
+
+        </article>
+
+
+        <div class="environment-stats">
+
+
+          <article class="environment-stat glass">
+
+            <small>
+              AFFECTED STOPS
+            </small>
+
+            <strong>
+              12
+            </strong>
+
+            <span>
+              Stops requiring heat awareness
+            </span>
+
+          </article>
+
+
+          <article class="environment-stat glass">
+
+            <small>
+              HIGH-EXPOSURE ROUTES
+            </small>
+
+            <strong>
+              4
+            </strong>
+
+            <span>
+              Routes requiring attention
+            </span>
+
+          </article>
+
+
+          <article class="environment-stat glass">
+
+            <small>
+              RECOMMENDED ACTION
+            </small>
+
+            <strong>
+              Hydrate + Shade
+            </strong>
+
+            <span>
+              Prioritize exposed corridors during peak heat.
+            </span>
+
+          </article>
+
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= AI ================= -->
+
+    <section
+      class="section ai-section"
+      id="assistant"
+    >
+
+      <div class="ai-layout reveal">
+
+        <div class="ai-copy">
+
+          <span class="section-label">
+            05 / AI ASSISTANT
+          </span>
+
+          <h2>
+            Ask HAZE.
+            <br>
+            <em>Move Smarter.</em>
+          </h2>
+
+          <p>
+            Ask about Hyderabad buses, routes,
+            congestion or heat risk. This frontend
+            assistant uses demo responses now and can
+            connect to the future backend later.
+          </p>
+
+
+          <button
+            class="primary-button"
+            onclick="toggleChat()"
+          >
+            Open HAZE AI →
+          </button>
+
+        </div>
+
+
+        <article class="ai-preview glass">
+
+          <div class="bot-avatar large">
+
+            <span class="eye left"></span>
+            <span class="eye right"></span>
+            <span class="mouth"></span>
+
+          </div>
+
+          <small>
+            HAZE AI / MOBILITY ASSISTANT
+          </small>
+
+          <h3>
+            City-aware assistance
+          </h3>
+
+          <p>
+            Fast, focused answers for the next journey.
+          </p>
+
+
+          <div class="ai-lines">
+
+            <i></i>
+            <i></i>
+            <i></i>
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= ABOUT ================= -->
+
+    <section class="section" id="about">
+
+      <div class="section-heading reveal">
+
+        <div>
+
+          <span class="section-label">
+            06 / ABOUT HAZE
+          </span>
+
+          <h2>
+            Built with
+            <em>Purpose.</em>
+          </h2>
+
+          <p>
+            A Hyderabad-first mobility concept shaped
+            around clarity, intelligent interaction and
+            thoughtful product design.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="about-grid reveal delay-1">
+
+
+        <article class="about-story glass">
+
+          <small>
+            THE IDEA BEHIND HAZE
+          </small>
+
+          <h3>
+            Turning complex city movement into something
+            people can understand and act on.
+          </h3>
+
+          <p>
+            HAZE was created with a simple vision:
+            make urban mobility feel less fragmented.
+            We brought live transit visualization,
+            route intelligence, congestion awareness,
+            environmental risk and AI assistance into
+            one connected experience for Hyderabad.
+          </p>
+
+          <p>
+            The project represents continuous iteration,
+            testing, problem-solving and attention to
+            detail. Every part of the interface was
+            designed with the goal of making a complex
+            mobility system feel clear, useful and
+            futuristic without losing practicality.
+          </p>
+
+          <p>
+            HAZE is ultimately a demonstration of how
+            a city-focused digital mobility layer could
+            bring transportation, environmental awareness
+            and intelligent assistance together.
+          </p>
+
+        </article>
+
+
+        <div class="about-pillars">
+
+          <article class="glass">
+
+            <span>01</span>
+
+            <strong>
+              Real-Time
+            </strong>
+
+            <p>
+              Mobility information designed around
+              live city movement.
+            </p>
+
+          </article>
+
+
+          <article class="glass">
+
+            <span>02</span>
+
+            <strong>
+              Intelligent
+            </strong>
+
+            <p>
+              Data presented as useful decisions,
+              not disconnected numbers.
+            </p>
+
+          </article>
+
+
+          <article class="glass">
+
+            <span>03</span>
+
+            <strong>
+              Hyderabad-First
+            </strong>
+
+            <p>
+              Designed around the unique movement
+              and needs of Hyderabad.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+
+      <!-- TEAM -->
+
+      <div class="team-credit glass reveal delay-2">
+
+        <div>
+
+          <small>
+            CREATED BY THE HAZE TEAM
+          </small>
+
+          <h3>
+            Zeeshan
+            <span>•</span>
+            Ahmed
+            <span>•</span>
+            Saad
+          </h3>
+
+          <p>
+            Concept • Design • Development • Product Vision
+          </p>
+
+        </div>
+
+
+        <div class="team-mark">
+          H
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ================= VEHICLE PANEL ================= -->
+
+  <aside
+    class="vehicle-panel glass"
+    id="vehiclePanel"
+  >
+
+    <button
+      onclick="closeVehicleDetails()"
+      aria-label="Close"
+    >
+      ×
+    </button>
+
+    <small>
+      VEHICLE DETAILS
+    </small>
+
+    <h3 id="detailVehicleId">
+      BUS-101
+    </h3>
+
+
+    <div class="vehicle-details">
 
       <div>
-        <strong id="riskIndex">82</strong>
-        <span>/ 100</span>
+        <span>Route</span>
+        <b id="detailRoute">25A</b>
       </div>
 
-      <p>
-        Environmental exposure index
-      </p>
-
-      <div class="index-ring">
-        <span>82</span>
+      <div>
+        <span>Speed</span>
+        <b id="detailSpeed">24 km/h</b>
       </div>
 
-    </article>
-
-  </div>
-
-
-  <div class="environment-grid reveal delay-2">
-
-    <article class="exposure-card glass">
-
-      <div class="env-card-head">
-
-        <div>
-          <small>TRANSIT EXPOSURE</small>
-          <h3>Heat Risk Zones</h3>
-        </div>
-
-        <div class="risk-legend">
-
-          <span>
-            <i class="moderate"></i>
-            Moderate
-          </span>
-
-          <span>
-            <i class="high"></i>
-            High
-          </span>
-
-          <span>
-            <i class="extreme"></i>
-            Extreme
-          </span>
-
-        </div>
-
+      <div>
+        <span>Delay</span>
+        <b id="detailDelay">+2 min</b>
       </div>
 
-
-      <div class="zone-list">
-
-        <div>
-
-          <span class="zone-dot moderate"></span>
-
-          <div>
-            <b>Central Hyderabad</b>
-            <small>
-              Moderate exposure • 4 stops
-            </small>
-          </div>
-
-          <strong>62</strong>
-
-        </div>
-
-
-        <div>
-
-          <span class="zone-dot high"></span>
-
-          <div>
-            <b>Mehdipatnam Corridor</b>
-            <small>
-              High exposure • 5 stops
-            </small>
-          </div>
-
-          <strong>82</strong>
-
-        </div>
-
-
-        <div>
-
-          <span class="zone-dot extreme"></span>
-
-          <div>
-            <b>Secunderabad Link</b>
-            <small>
-              Extreme exposure • 3 stops
-            </small>
-          </div>
-
-          <strong>91</strong>
-
-        </div>
-
+      <div>
+        <span>Status</span>
+        <b id="detailStatus">NORMAL</b>
       </div>
-
-
-      <p class="data-note">
-        ✦ Environmental values are simulated for this
-        frontend demo. Backend weather data can replace
-        them later.
-      </p>
-
-    </article>
-
-
-    <div class="env-side">
-
-      <article class="env-stat glass">
-
-        <small>AFFECTED STOPS</small>
-
-        <strong>12</strong>
-
-        <span>
-          Stops requiring heat awareness
-        </span>
-
-      </article>
-
-
-      <article class="env-stat glass">
-
-        <small>HIGH-EXPOSURE ROUTES</small>
-
-        <strong>4</strong>
-
-        <span>
-          Routes requiring attention
-        </span>
-
-      </article>
-
-
-      <article class="env-stat glass">
-
-        <small>RECOMMENDED ACTION</small>
-
-        <strong>Hydrate + Shade</strong>
-
-        <span>
-          Prioritize exposed corridors during peak heat.
-        </span>
-
-      </article>
 
     </div>
 
-  </div>
 
-</section>
+    <p>
+      Last updated: Demo data
+    </p>
+
+  </aside>
 
 
-<!-- ================= AI ================= -->
+  <!-- ================= CHATBOT ================= -->
 
-<section class="section dark-section" id="assistant">
+  <section
+    class="chat-panel glass"
+    id="chatPanel"
+  >
 
-  <div class="assistant-grid reveal">
+    <header class="chat-header">
 
-    <div class="assistant-copy">
+      <div class="chat-title">
 
-      <span>05 / AI ASSISTANT</span>
+        <div class="bot-avatar">
 
-      <h2>
-        Ask HAZE.<br>
-        <em>Move Smarter.</em>
-      </h2>
+          <span class="eye left"></span>
+          <span class="eye right"></span>
+          <span class="mouth"></span>
 
-      <p>
-        Ask about Hyderabad buses, routes, congestion
-        or heat risk. This is a polished frontend demo;
-        the real intelligence layer can connect to the
-        team's future backend.
-      </p>
+        </div>
 
-      <button class="primary-btn" onclick="toggleChat()">
-        Open HAZE AI →
+        <div>
+
+          <strong>
+            HAZE AI
+          </strong>
+
+          <small>
+            Mobility Assistant
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <button
+        onclick="toggleChat()"
+        aria-label="Close chat"
+      >
+        ×
+      </button>
+
+    </header>
+
+
+    <div
+      class="chat-messages"
+      id="chatMessages"
+    >
+
+      <div class="chat-message bot">
+
+        <b>HAZE AI</b>
+
+        <span>
+          Hey! I'm HAZE AI. Ask me about Hyderabad
+          buses, routes, traffic or heat risk.
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="quick-prompts">
+
+      <button onclick="quickAsk('Show me busy routes')">
+        Busy routes
+      </button>
+
+      <button onclick="quickAsk('Find a bus route')">
+        Bus route
+      </button>
+
+      <button onclick="quickAsk('What is traffic like?')">
+        Traffic
+      </button>
+
+      <button onclick="quickAsk('What is the heat risk?')">
+        Heat risk
       </button>
 
     </div>
 
 
-    <article class="ai-preview glass">
+    <div class="chat-input">
 
-      <div class="bot-avatar large-avatar" aria-hidden="true">
-        <span class="eye left"></span>
-        <span class="eye right"></span>
-        <span class="mouth"></span>
-      </div>
+      <input
+        id="chatInput"
+        type="text"
+        placeholder="Ask HAZE..."
+      >
 
-      <small>
-        HAZE AI / MOBILITY ASSISTANT
-      </small>
-
-      <h3>
-        City-aware assistance
-      </h3>
-
-      <p>
-        Fast, focused answers for the next journey.
-      </p>
-
-      <div class="ai-lines">
-        <i></i>
-        <i></i>
-        <i></i>
-      </div>
-
-    </article>
-
-  </div>
-
-</section>
-
-
-<!-- ================= ABOUT ================= -->
-
-<section class="section about-section" id="about">
-
-  <div class="section-heading reveal">
-
-    <div>
-
-      <span>06 / ABOUT HAZE</span>
-
-      <h2>
-        Built with
-        <em>Purpose.</em>
-      </h2>
-
-      <p>
-        More than a dashboard — HAZE is a Hyderabad-first
-        mobility concept shaped around clarity, intelligent
-        interaction and thoughtful product design.
-      </p>
+      <button
+        onclick="sendChatMessage()"
+        aria-label="Send"
+      >
+        →
+      </button>
 
     </div>
 
-  </div>
+  </section>
 
 
-  <div class="about-story reveal delay-1">
+  <!-- FLOATING AI BUTTON -->
 
-    <article class="about-main glass">
+  <button
+    class="chat-fab"
+    onclick="toggleChat()"
+    aria-label="Open HAZE AI"
+  >
 
-      <span class="about-kicker">
-        THE IDEA BEHIND HAZE
-      </span>
+    <span class="bot-avatar">
 
-      <h3>
-        Turning complex city movement into something
-        people can understand and act on.
-      </h3>
+      <span class="eye left"></span>
+      <span class="eye right"></span>
+      <span class="mouth"></span>
 
-      <p>
-        HAZE was designed from the ground up around one
-        simple ambition: make urban mobility feel less
-        fragmented. We brought live transit visualization,
-        route intelligence, congestion awareness,
-        environmental risk and an AI assistant into one
-        connected experience for Hyderabad.
-      </p>
+    </span>
 
-      <p>
-        Every screen, interaction and visual signal was
-        refined through iteration, testing and problem-solving
-        — with equal attention given to functionality and
-        the feeling of using the product. The result is a
-        frontend prototype built to demonstrate how a smarter
-        city mobility layer could look and work.
-      </p>
+  </button>
 
-    </article>
 
+  <!-- ================= FOOTER ================= -->
 
-    <div class="about-pillars">
+  <footer>
 
-      <article class="glass">
-        <span>01</span>
-        <b>Real-Time</b>
-        <small>
-          Mobility information designed around live city movement.
-        </small>
-      </article>
+    <span>
+      HAZE • Hyderabad Advanced Zone &amp; Express Transit
+    </span>
 
-      <article class="glass">
-        <span>02</span>
-        <b>Intelligent</b>
-        <small>
-          Data presented as decisions, not disconnected numbers.
-        </small>
-      </article>
+    <span>
+      Frontend Demo • No API Keys Required
+    </span>
 
-      <article class="glass">
-        <span>03</span>
-        <b>Hyderabad-First</b>
-        <small>
-          Built around the unique movement and needs of the city.
-        </small>
-      </article>
+  </footer>
 
-    </div>
 
-  </div>
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  ></script>
 
-
-  <div class="team-credit glass reveal delay-2">
-
-    <div>
-
-      <small>CREATED BY THE HAZE TEAM</small>
-
-      <h3>
-        Zeeshan
-        <span>•</span>
-        Ahmed
-        <span>•</span>
-        Saad
-      </h3>
-
-      <p>
-        Concept • Design • Development • Product Vision
-      </p>
-
-    </div>
-
-    <div class="credit-mark">
-      H
-    </div>
-
-  </div>
-
-</section>
-
-</main>
-
-
-<!-- ================= VEHICLE DETAILS ================= -->
-
-<div class="vehicle-panel glass" id="vehiclePanel">
-
-  <button onclick="closeVehicleDetails()">×</button>
-
-  <small>VEHICLE DETAILS</small>
-
-  <h3 id="detailVehicleId">
-    BUS-101
-  </h3>
-
-  <div class="detail-grid">
-
-    <div>
-      <span>Route</span>
-      <b id="detailRoute">25A</b>
-    </div>
-
-    <div>
-      <span>Speed</span>
-      <b id="detailSpeed">24 km/h</b>
-    </div>
-
-    <div>
-      <span>Delay</span>
-      <b id="detailDelay">+2 min</b>
-    </div>
-
-    <div>
-      <span>Status</span>
-      <b id="detailStatus">NORMAL</b>
-    </div>
-
-  </div>
-
-  <p id="detailUpdated">
-    Last updated: Demo data
-  </p>
-
-</div>
-
-
-<!-- ================= CHATBOT ================= -->
-
-<div class="chat-panel glass" id="chatPanel">
-
-  <div class="chat-header">
-
-    <div class="chat-brand">
-
-      <div class="bot-avatar">
-        <span class="eye left"></span>
-        <span class="eye right"></span>
-        <span class="mouth"></span>
-      </div>
-
-      <div>
-        <strong>HAZE AI</strong>
-        <small>Mobility Assistant</small>
-      </div>
-
-    </div>
-
-    <button onclick="toggleChat()">×</button>
-
-  </div>
-
-
-  <div id="chatMessages" class="chat-messages">
-
-    <div class="chat-message bot">
-      <b>HAZE AI</b>
-      <span>
-        Hi! I'm HAZE. Ask me about Hyderabad buses,
-        routes, congestion or heat risk.
-      </span>
-    </div>
-
-  </div>
-
-
-  <div class="quick-prompts">
-
-    <button onclick="quickAsk('Show me busy routes')">
-      Busy routes
-    </button>
-
-    <button onclick="quickAsk('Find a bus route')">
-      Bus route
-    </button>
-
-    <button onclick="quickAsk('What is traffic like?')">
-      Traffic
-    </button>
-
-    <button onclick="quickAsk('What is the heat risk?')">
-      Heat risk
-    </button>
-
-  </div>
-
-
-  <div class="chat-input">
-
-    <input
-      id="chatInput"
-      placeholder="Ask HAZE..."
-      onkeydown="handleChatKey(event)"
-    >
-
-    <button onclick="sendChatMessage()">
-      →
-    </button>
-
-  </div>
-
-</div>
-
-
-<button class="chat-fab" onclick="toggleChat" aria-label="Open HAZE AI">
-  <span class="bot-avatar">
-    <span class="eye left"></span>
-    <span class="eye right"></span>
-    <span class="mouth"></span>
-  </span>
-</button>
-
-
-<footer>
-
-  <span>
-    HAZE • Hyderabad Advanced Zone &amp; Express Transit
-  </span>
-
-  <span>
-    Frontend demo • No API keys required
-  </span>
-
-  <span>
-    Hero photo: Kishor Krishnamoorthi / Wikimedia Commons • CC BY-SA 3.0
-  </span>
-
-</footer>
-
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="app.js"></script>
+  <script src="app.js"></script>
 
 </body>
 </html>
