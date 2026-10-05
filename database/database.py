@@ -1,151 +1,275 @@
-"""Create a deterministic, simulated HAZE demo database.
+"""HAZE SQLite database layer.
 
-This script intentionally seeds only the database layer.  It does not contact
-any live transit service and does not implement GTFS ingestion or congestion
-classification.
+This module deliberately contains only database concerns.  It does not contain
+FastAPI, frontend, GTFS, AI, machine-learning, or congestion-classification
+logic.
+
+The public helpers return ordinary Python dictionaries/lists so a future
+FastAPI layer can consume them without knowing SQLite's Row type.
 """
 
 from _future_ import annotations
 
-from datetime import datetime, timedelta
-from pathlib import Path
 import sqlite3
-import sys
+from pathlib import Path
+from typing import Any, Iterable
 
-# Allow python database/seed.py from the HAZE project root as well as
-# python seed.py from inside database/.
-DATABASE_DIR = Path(_file_).resolve().parent
-if str(DATABASE_DIR) not in sys.path:
-    sys.path.insert(0, str(DATABASE_DIR))
-
-from database import DATABASE_PATH, create_database, get_connection  # noqa: E402
+DATABASE_PATH = Path(_file_).resolve().parent / "transit.db"
+SCHEMA_PATH = Path(_file_).resolve().parent / "schema.sql"
 
 
-ROUTES = [
-    ("25A", "Hyderabad Central", 40.0, "#00D4FF"),
-    ("10H", "Secunderabad - Hitech City", 50.0, "#7C5CFC"),
-    ("218", "Mehdipatnam - Uppal", 40.0, "#FFB000"),
-    ("5K", "Koti - Kukatpally", 35.0, "#FF5C8A"),
-    ("49M", "Madhapur - Mehdipatnam", 45.0, "#39D98A"),
-]
-
-VEHICLES = [
-    ("BUS-101", "25A", "active"),
-    ("BUS-102", "25A", "active"),
-    ("BUS-103", "25A", "active"),
-    ("BUS-201", "10H", "active"),
-    ("BUS-202", "10H", "active"),
-    ("BUS-203", "10H", "active"),
-    ("BUS-301", "218", "active"),
-    ("BUS-302", "218", "active"),
-    ("BUS-303", "218", "active"),
-    ("BUS-401", "5K", "active"),
-    ("BUS-402", "5K", "active"),
-    ("BUS-403", "5K", "active"),
-    ("BUS-501", "49M", "active"),
-    ("BUS-502", "49M", "active"),
-    ("BUS-503", "49M", "active"),
-]
-
-# Base coordinates/speeds/delays are simulated and intentionally varied so
-# later backend demonstrations can exercise different traffic conditions.
-POSITION_SEEDS = {
-    "BUS-101": (17.3850, 78.4860, 24.5, 2.0),
-    "BUS-102": (17.3920, 78.4800, 31.2, 0.0),
-    "BUS-103": (17.3765, 78.4875, 16.8, 5.0),
-    "BUS-201": (17.4399, 78.4983, 42.0, 1.0),
-    "BUS-202": (17.4440, 78.3850, 28.5, 3.0),
-    "BUS-203": (17.4250, 78.4080, 14.2, 8.0),
-    "BUS-301": (17.3960, 78.4510, 22.5, 4.0),
-    "BUS-302": (17.4100, 78.5120, 34.1, 1.0),
-    "BUS-303": (17.3700, 78.5570, 11.5, 10.0),
-    "BUS-401": (17.3850, 78.4700, 27.5, 2.0),
-    "BUS-402": (17.4930, 78.3990, 19.0, 6.0),
-    "BUS-403": (17.4550, 78.3700, 33.8, 0.0),
-    "BUS-501": (17.4350, 78.3910, 36.5, 1.0),
-    "BUS-502": (17.4140, 78.4480, 12.0, 9.0),
-    "BUS-503": (17.4050, 78.4550, 25.0, 3.0),
-}
+class DatabaseError(RuntimeError):
+    """Raised when a HAZE database operation fails at the database layer."""
 
 
-# Fixed timestamp makes the database deterministic and easy to test.
-BASE_TIME = datetime(2026, 10, 5, 12, 0, 0)
+def get_connection() -> sqlite3.Connection:
+    """Open a reliable SQLite connection configured for application use.
+
+    Foreign keys are enabled per connection because SQLite does not persist
+    that setting globally. WAL mode improves read/write concurrency for the
+    later backend while keeping the database as a single local SQLite file.
+    """
+    try:
+        connection = sqlite3.connect(
+            DATABASE_PATH,
+            timeout=10.0,
+            isolation_level=None,
+        )
+        connection.row_factory = sqlite3.Row
+        connection.execute("PRAGMA foreign_keys = ON;")
+        connection.execute("PRAGMA busy_timeout = 10000;")
+        connection.execute("PRAGMA journal_mode = WAL;")
+        connection.execute("PRAGMA synchronous = NORMAL;")
+        return connection
+    except sqlite3.Error as exc:
+        raise DatabaseError(f"Unable to open HAZE database: {exc}") from exc
 
 
-def build_position_rows() -> list[tuple[str, float, float, float, float, str]]:
-    """Generate four historical records per vehicle at 30-second intervals."""
-    rows: list[tuple[str, float, float, float, float, str]] = []
-
-    for vehicle_index, (vehicle_id, _, _) in enumerate(VEHICLES):
-        latitude, longitude, speed, delay = POSITION_SEEDS[vehicle_id]
-
-        for step in range(4):
-            timestamp = BASE_TIME + timedelta(seconds=30 * step)
-            lat = latitude + (0.0009 * step) + (vehicle_index * 0.00001)
-            lon = longitude + (0.0010 * step) + (vehicle_index * 0.00001)
-            step_speed = max(0.0, speed + (0.6 * step) - (0.2 * (vehicle_index % 3)))
-            step_delay = max(0.0, delay + ((step % 2) * 0.5) - (0.25 if step == 3 else 0))
-
-            rows.append(
-                (
-                    vehicle_id,
-                    round(lat, 6),
-                    round(lon, 6),
-                    round(step_speed, 2),
-                    round(step_delay, 2),
-                    timestamp.strftime("%Y-%m-%d %H:%M:%S"),
-                )
-            )
-
-    return rows
+def _rows_to_dicts(rows: Iterable[sqlite3.Row]) -> list[dict[str, Any]]:
+    """Convert SQLite rows into normal Python dictionaries."""
+    return [dict(row) for row in rows]
 
 
-def seed_database() -> None:
-    """Rebuild the demo contents atomically and print a concise summary."""
-    create_database()
-    position_rows = build_position_rows()
+def _require_id(value: str, field_name: str) -> str:
+    """Validate an ID before it reaches a query."""
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{field_name} must be a non-empty string")
+    return value.strip()
 
+
+def create_database() -> None:
+    """Create the HAZE schema and indexes if they do not exist."""
+    if not SCHEMA_PATH.exists():
+        raise DatabaseError(f"Schema file not found: {SCHEMA_PATH}")
+
+    schema = SCHEMA_PATH.read_text(encoding="utf-8")
     connection = get_connection()
     try:
-        connection.execute("BEGIN IMMEDIATE;")
-        connection.execute("DELETE FROM vehicle_positions;")
-        connection.execute("DELETE FROM vehicles;")
-        connection.execute("DELETE FROM routes;")
-
-        connection.executemany(
-            """
-            INSERT INTO routes (route_id, route_name, speed_limit, color)
-            VALUES (?, ?, ?, ?)
-            """,
-            ROUTES,
-        )
-        connection.executemany(
-            """
-            INSERT INTO vehicles (vehicle_id, route_id, status)
-            VALUES (?, ?, ?)
-            """,
-            VEHICLES,
-        )
-        connection.executemany(
-            """
-            INSERT INTO vehicle_positions
-                (vehicle_id, latitude, longitude, speed, delay, timestamp)
-            VALUES (?, ?, ?, ?, ?, ?)
-            """,
-            position_rows,
-        )
-        connection.commit()
-    except Exception:
-        connection.rollback()
-        raise
+        connection.executescript(schema)
+    except sqlite3.Error as exc:
+        raise DatabaseError(f"Unable to create HAZE schema: {exc}") from exc
     finally:
         connection.close()
 
-    print(f"Seeded simulated HAZE demo data into: {DATABASE_PATH}")
-    print(f"Routes: {len(ROUTES)}")
-    print(f"Vehicles: {len(VEHICLES)}")
-    print(f"Vehicle positions: {len(position_rows)}")
+
+def database_health_check() -> dict[str, Any]:
+    """Return a small health/status snapshot useful to the future backend."""
+    connection = get_connection()
+    try:
+        foreign_keys = connection.execute("PRAGMA foreign_keys;").fetchone()[0]
+        integrity = connection.execute("PRAGMA integrity_check;").fetchone()[0]
+        return {
+            "database": str(DATABASE_PATH),
+            "exists": DATABASE_PATH.exists(),
+            "foreign_keys": bool(foreign_keys),
+            "integrity_check": integrity,
+            "healthy": bool(foreign_keys) and integrity == "ok",
+        }
+    except sqlite3.Error as exc:
+        raise DatabaseError(f"Database health check failed: {exc}") from exc
+    finally:
+        connection.close()
+
+
+def get_routes() -> list[dict[str, Any]]:
+    """Return all routes ordered by route ID."""
+    with get_connection() as connection:
+        rows = connection.execute(
+            """
+            SELECT route_id, route_name, speed_limit, color
+            FROM routes
+            ORDER BY route_id
+            """
+        ).fetchall()
+    return _rows_to_dicts(rows)
+
+
+def get_route(route_id: str) -> dict[str, Any] | None:
+    """Return one route by ID, or None when it does not exist."""
+    route_id = _require_id(route_id, "route_id")
+    with get_connection() as connection:
+        row = connection.execute(
+            """
+            SELECT route_id, route_name, speed_limit, color
+            FROM routes
+            WHERE route_id = ?
+            """,
+            (route_id,),
+        ).fetchone()
+    return dict(row) if row else None
+
+
+def get_vehicles() -> list[dict[str, Any]]:
+    """Return all vehicles with their route information."""
+    with get_connection() as connection:
+        rows = connection.execute(
+            """
+            SELECT v.vehicle_id, v.route_id, v.status, r.route_name
+            FROM vehicles AS v
+            JOIN routes AS r ON r.route_id = v.route_id
+            ORDER BY v.vehicle_id
+            """
+        ).fetchall()
+    return _rows_to_dicts(rows)
+
+
+def get_vehicle(vehicle_id: str) -> dict[str, Any] | None:
+    """Return one vehicle with route information, or None when absent."""
+    vehicle_id = _require_id(vehicle_id, "vehicle_id")
+    with get_connection() as connection:
+        row = connection.execute(
+            """
+            SELECT v.vehicle_id, v.route_id, v.status, r.route_name
+            FROM vehicles AS v
+            JOIN routes AS r ON r.route_id = v.route_id
+            WHERE v.vehicle_id = ?
+            """,
+            (vehicle_id,),
+        ).fetchone()
+    return dict(row) if row else None
+
+
+def get_latest_vehicle_position(vehicle_id: str) -> dict[str, Any] | None:
+    """Return the newest stored position for one vehicle."""
+    vehicle_id = _require_id(vehicle_id, "vehicle_id")
+    with get_connection() as connection:
+        row = connection.execute(
+            """
+            SELECT id, vehicle_id, latitude, longitude, speed, delay, timestamp
+            FROM vehicle_positions
+            WHERE vehicle_id = ?
+            ORDER BY timestamp DESC, id DESC
+            LIMIT 1
+            """,
+            (vehicle_id,),
+        ).fetchone()
+    return dict(row) if row else None
+
+
+def get_latest_vehicle_positions() -> list[dict[str, Any]]:
+    """Return exactly one newest position for every vehicle with position data.
+
+    Timestamp is the primary ordering key; ID breaks ties deterministically if
+    two position records have the same timestamp.
+    """
+    with get_connection() as connection:
+        rows = connection.execute(
+            """
+            SELECT vp.id, vp.vehicle_id, vp.latitude, vp.longitude,
+                   vp.speed, vp.delay, vp.timestamp,
+                   v.route_id, v.status,
+                   r.route_name, r.speed_limit, r.color
+            FROM vehicle_positions AS vp
+            JOIN vehicles AS v ON v.vehicle_id = vp.vehicle_id
+            JOIN routes AS r ON r.route_id = v.route_id
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM vehicle_positions AS newer
+                WHERE newer.vehicle_id = vp.vehicle_id
+                  AND (
+                      newer.timestamp > vp.timestamp
+                      OR (
+                          newer.timestamp = vp.timestamp
+                          AND newer.id > vp.id
+                      )
+                  )
+            )
+            ORDER BY vp.vehicle_id
+            """
+        ).fetchall()
+    return _rows_to_dicts(rows)
+
+
+def get_vehicle_positions(vehicle_id: str) -> list[dict[str, Any]]:
+    """Return all historical positions for a vehicle, newest first."""
+    vehicle_id = _require_id(vehicle_id, "vehicle_id")
+    with get_connection() as connection:
+        rows = connection.execute(
+            """
+            SELECT id, vehicle_id, latitude, longitude, speed, delay, timestamp
+            FROM vehicle_positions
+            WHERE vehicle_id = ?
+            ORDER BY timestamp DESC, id DESC
+            """,
+            (vehicle_id,),
+        ).fetchall()
+    return _rows_to_dicts(rows)
+
+
+def get_route_vehicles(route_id: str) -> list[dict[str, Any]]:
+    """Return all vehicles currently assigned to a route."""
+    route_id = _require_id(route_id, "route_id")
+    with get_connection() as connection:
+        rows = connection.execute(
+            """
+            SELECT vehicle_id, route_id, status
+            FROM vehicles
+            WHERE route_id = ?
+            ORDER BY vehicle_id
+            """,
+            (route_id,),
+        ).fetchall()
+    return _rows_to_dicts(rows)
+
+
+def get_congestion_data() -> list[dict[str, Any]]:
+    """Return latest raw speed/delay data plus route speed limits.
+
+    No NORMAL/SLOW/CONGESTED classification is performed here.  That belongs
+    to a later backend component, exactly as required by the project scope.
+    """
+    with get_connection() as connection:
+        rows = connection.execute(
+            """
+            SELECT vp.vehicle_id,
+                   v.route_id,
+                   r.route_name,
+                   r.speed_limit,
+                   vp.speed,
+                   vp.delay,
+                   vp.timestamp
+            FROM vehicle_positions AS vp
+            JOIN vehicles AS v ON v.vehicle_id = vp.vehicle_id
+            JOIN routes AS r ON r.route_id = v.route_id
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM vehicle_positions AS newer
+                WHERE newer.vehicle_id = vp.vehicle_id
+                  AND (
+                      newer.timestamp > vp.timestamp
+                      OR (
+                          newer.timestamp = vp.timestamp
+                          AND newer.id > vp.id
+                      )
+                  )
+            )
+            ORDER BY v.route_id, vp.vehicle_id
+            """
+        ).fetchall()
+    return _rows_to_dicts(rows)
 
 
 if _name_ == "_main_":
-    seed_database()
+    create_database()
+    print(database_health_check())
+    print(f"Database ready: {DATABASE_PATH}")
