@@ -1,774 +1,1238 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
 
-  <title>HAZE — Smart Urban Mobility</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    >
 
-  <!-- Leaflet -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
+    <meta
+        name="description"
+        content="HAZE — Hyperlocal AI-Powered Zonal Mobility Engine for smarter urban mobility."
+    >
 
-  <!-- HAZE CSS -->
-  <link rel="stylesheet" href="style.css">
+    <title>HAZE — Smart Mobility</title>
+
+    <!-- Leaflet -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- ================= NAVBAR ================= -->
-  <header class="navbar">
+    <!-- =========================
+         NAVBAR
+    ========================== -->
+    <header class="navbar" id="navbar">
 
-    <a href="#home" class="brand">
-      <span class="brand-icon">H</span>
+        <div class="nav-inner">
 
-      <span class="brand-text">
-        <strong>HAZE</strong>
-        <small>Hyperlocal AI-Powered Zonal Mobility Engine</small>
-      </span>
-    </a>
+            <a href="#home" class="brand">
+                <div class="brand-mark">
+                    H
+                </div>
 
-    <nav class="nav-links">
-      <a href="#home" class="active">Home</a>
-      <a href="#transit">Live Transit</a>
-      <a href="#routes">Routes</a>
-      <a href="#analytics">Analytics</a>
-      <a href="#assistant">AI Assistant</a>
-      <a href="#about">About</a>
-    </nav>
+                <div class="brand-text">
+                    <strong>HAZE</strong>
+                    <span>SMART MOBILITY</span>
+                </div>
+            </a>
 
-    <div class="nav-actions">
-      <!-- Light / Dark mode -->
-      <button
-        class="theme-toggle"
-        id="themeToggle"
-        onclick="toggleTheme()"
-        aria-label="Toggle theme"
-      >
-        <span class="theme-icon">☾</span>
-      </button>
+            <nav class="nav-links" id="navLinks">
 
-      <button class="login-btn">Login</button>
+                <a href="#home" class="active">
+                    Home
+                </a>
+
+                <a href="#transit">
+                    Live Transit
+                </a>
+
+                <a href="#routes">
+                    Routes
+                </a>
+
+                <a href="#analytics">
+                    Analytics
+                </a>
+
+                <a href="#assistant">
+                    AI Assistant
+                </a>
+
+                <a href="#about">
+                    About
+                </a>
+
+            </nav>
+
+            <div class="nav-actions">
+
+                <!-- Theme toggle -->
+                <button
+                    class="theme-toggle"
+                    id="themeToggle"
+                    type="button"
+                    onclick="toggleTheme()"
+                    aria-label="Toggle light and dark mode"
+                >
+                    <span class="theme-track">
+                        <span class="theme-thumb">
+                            ☾
+                        </span>
+                    </span>
+                </button>
+
+                <!-- Mobile menu -->
+                <button
+                    class="menu-toggle"
+                    id="menuToggle"
+                    type="button"
+                    onclick="toggleMobileMenu()"
+                    aria-label="Open navigation menu"
+                >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <!-- =========================
+             HERO
+        ========================== -->
+        <section class="hero reveal" id="home">
+
+            <div class="hero-background"></div>
+            <div class="hero-overlay"></div>
+
+            <div class="hero-content">
+
+                <div class="location-badge">
+                    <span class="location-dot"></span>
+                    HYDERABAD • TELANGANA
+                </div>
+
+                <p class="eyebrow">
+                    HYPERLOCAL AI-POWERED MOBILITY
+                </p>
+
+                <h1>
+                    Move Smarter
+                    <span>Through Your City.</span>
+                </h1>
+
+                <p class="hero-description">
+                    HAZE transforms urban transportation data into
+                    intelligent, real-time mobility insights for
+                    Hyderabad.
+                </p>
+
+                <div class="hero-actions">
+
+                    <a
+                        href="#transit"
+                        class="primary-btn"
+                    >
+                        Explore Live Transit
+                        <span>→</span>
+                    </a>
+
+                    <a
+                        href="#routes"
+                        class="secondary-btn"
+                    >
+                        Plan Your Route
+                    </a>
+
+                </div>
+
+                <div class="hero-status">
+                    <span class="status-pulse"></span>
+                    SYSTEM ONLINE
+                    <span class="status-divider"></span>
+                    REAL-TIME NETWORK
+                </div>
+
+            </div>
+
+
+            <!-- Hero stats -->
+
+            <div class="hero-stats">
+
+                <div class="hero-stat reveal">
+                    <strong
+                        class="count-number"
+                        data-count="142"
+                        data-suffix="+"
+                    >
+                        0
+                    </strong>
+                    <span>Active Vehicles</span>
+                </div>
+
+                <div class="hero-stat reveal">
+                    <strong
+                        class="count-number"
+                        data-count="24"
+                    >
+                        0
+                    </strong>
+                    <span>Active Routes</span>
+                </div>
+
+                <div class="hero-stat reveal">
+                    <strong
+                        class="count-number"
+                        data-count="87"
+                        data-suffix="%"
+                    >
+                        0
+                    </strong>
+                    <span>On-Time Rate</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ROUTE PLANNER
+        ========================== -->
+        <section class="planner-section section reveal">
+
+            <div class="planner-card glass-card">
+
+                <div class="section-heading compact">
+
+                    <span class="section-kicker">
+                        SMART ROUTE PLANNER
+                    </span>
+
+                    <h2>
+                        Where are you going?
+                    </h2>
+
+                    <p>
+                        Find smarter ways to move around Hyderabad.
+                    </p>
+
+                </div>
+
+
+                <div class="planner-form">
+
+                    <div class="planner-input">
+
+                        <span class="input-icon">
+                            ◎
+                        </span>
+
+                        <div>
+                            <label>FROM</label>
+                            <input
+                                type="text"
+                                id="fromLocation"
+                                placeholder="Current location"
+                            >
+                        </div>
+
+                    </div>
+
+
+                    <div class="planner-line"></div>
+
+
+                    <div class="planner-input">
+
+                        <span class="input-icon">
+                            ◉
+                        </span>
+
+                        <div>
+                            <label>TO</label>
+                            <input
+                                type="text"
+                                id="toLocation"
+                                placeholder="Destination in Hyderabad"
+                            >
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        class="planner-button"
+                        type="button"
+                        onclick="scrollToTransit()"
+                    >
+                        Find Route
+                        <span>→</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             LIVE TRANSIT
+        ========================== -->
+        <section
+            class="section transit-section reveal"
+            id="transit"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-kicker">
+                        LIVE NETWORK
+                    </span>
+
+                    <h2>
+                        Live Transit
+                    </h2>
+
+                    <p>
+                        Monitor Hyderabad's mobility network
+                        in real time.
+                    </p>
+
+                </div>
+
+                <div class="live-indicator">
+                    <span></span>
+                    LIVE
+                </div>
+
+            </div>
+
+
+            <!-- Statistics -->
+
+            <div class="stats-grid">
+
+                <div class="stat-card glass-card hover-lift">
+
+                    <span class="stat-label">
+                        ACTIVE VEHICLES
+                    </span>
+
+                    <strong
+                        id="activeVehicles"
+                        class="stat-number"
+                    >
+                        0
+                    </strong>
+
+                    <span class="stat-meta positive">
+                        Network active
+                    </span>
+
+                </div>
+
+
+                <div class="stat-card glass-card hover-lift">
+
+                    <span class="stat-label">
+                        ACTIVE ROUTES
+                    </span>
+
+                    <strong
+                        id="activeRoutes"
+                        class="stat-number"
+                    >
+                        0
+                    </strong>
+
+                    <span class="stat-meta positive">
+                        Operating now
+                    </span>
+
+                </div>
+
+
+                <div class="stat-card glass-card hover-lift">
+
+                    <span class="stat-label">
+                        ON-TIME RATE
+                    </span>
+
+                    <strong
+                        id="onTimeRate"
+                        class="stat-number"
+                    >
+                        0%
+                    </strong>
+
+                    <span class="stat-meta positive">
+                        Network performance
+                    </span>
+
+                </div>
+
+
+                <div class="stat-card glass-card hover-lift">
+
+                    <span class="stat-label">
+                        CONGESTED
+                    </span>
+
+                    <strong
+                        id="congestedCount"
+                        class="stat-number"
+                    >
+                        0
+                    </strong>
+
+                    <span class="stat-meta warning">
+                        Routes affected
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Map dashboard -->
+
+            <div class="transit-dashboard glass-card">
+
+                <aside class="transit-sidebar">
+
+                    <div class="sidebar-heading">
+
+                        <div>
+                            <span class="section-kicker">
+                                NETWORK
+                            </span>
+
+                            <h3>
+                                Hyderabad Transit
+                            </h3>
+                        </div>
+
+                        <span class="network-dot"></span>
+
+                    </div>
+
+
+                    <div class="network-status">
+
+                        <div class="status-row">
+                            <span>Network status</span>
+                            <strong>Operational</strong>
+                        </div>
+
+                        <div class="status-row">
+                            <span>Coverage</span>
+                            <strong>Hyderabad</strong>
+                        </div>
+
+                        <div class="status-row">
+                            <span>Data mode</span>
+                            <strong>Demo</strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="vehicle-legend">
+
+                        <h4>
+                            Vehicle status
+                        </h4>
+
+                        <div class="legend-item">
+                            <span class="legend-dot normal"></span>
+                            Normal
+                        </div>
+
+                        <div class="legend-item">
+                            <span class="legend-dot delayed"></span>
+                            Delayed
+                        </div>
+
+                        <div class="legend-item">
+                            <span class="legend-dot congested"></span>
+                            Congested
+                        </div>
+
+                    </div>
+
+
+                    <div class="sidebar-tip">
+
+                        <span>✦</span>
+
+                        <p>
+                            Click a vehicle on the map
+                            to view live details.
+                        </p>
+
+                    </div>
+
+                </aside>
+
+
+                <div class="map-container">
+
+                    <!-- Map search controls -->
+
+                    <div class="map-toolbar">
+
+                        <button
+                            class="map-search-trigger"
+                            id="mapSearchTrigger"
+                            type="button"
+                            onclick="toggleMapSearch()"
+                        >
+                            <span>⌕</span>
+                            Search Hyderabad
+                        </button>
+
+                        <button
+                            class="map-control-btn"
+                            type="button"
+                            onclick="resetMapView()"
+                            aria-label="Reset Hyderabad map"
+                        >
+                            ⌖
+                        </button>
+
+                    </div>
+
+
+                    <!-- Animated map search panel -->
+
+                    <div
+                        class="map-search-panel"
+                        id="mapSearchPanel"
+                    >
+
+                        <div class="map-search-inner">
+
+                            <span class="search-icon">
+                                ⌕
+                            </span>
+
+                            <input
+                                type="text"
+                                id="mapSearchInput"
+                                placeholder="Search an address in Hyderabad..."
+                                autocomplete="off"
+                                onkeydown="handleMapSearchKey(event)"
+                            >
+
+                            <button
+                                type="button"
+                                onclick="searchMapLocation()"
+                            >
+                                Search
+                            </button>
+
+                            <button
+                                class="close-search"
+                                type="button"
+                                onclick="toggleMapSearch()"
+                                aria-label="Close search"
+                            >
+                                ×
+                            </button>
+
+                        </div>
+
+                        <p id="mapSearchStatus">
+                            Search is limited to Hyderabad.
+                        </p>
+
+                    </div>
+
+
+                    <!-- Leaflet map -->
+
+                    <div
+                        id="map"
+                        class="map"
+                    ></div>
+
+
+                    <!-- Map bottom status -->
+
+                    <div class="map-status-bar">
+
+                        <span>
+                            <i></i>
+                            LIVE VEHICLE DATA
+                        </span>
+
+                        <span>
+                            HYDERABAD ZONE
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ROUTES
+        ========================== -->
+        <section
+            class="section routes-section reveal"
+            id="routes"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-kicker">
+                        SMART ROUTES
+                    </span>
+
+                    <h2>
+                        Popular Routes
+                    </h2>
+
+                    <p>
+                        Explore active routes across Hyderabad.
+                    </p>
+
+                </div>
+
+                <button
+                    class="outline-btn"
+                    type="button"
+                    onclick="scrollToTransit()"
+                >
+                    View Live Map →
+                </button>
+
+            </div>
+
+
+            <div class="routes-grid">
+
+                <article class="route-card glass-card hover-lift">
+
+                    <div class="route-top">
+                        <span class="route-number">25A</span>
+                        <span class="route-status normal">ON TIME</span>
+                    </div>
+
+                    <h3>
+                        Secunderabad
+                        <span>→</span>
+                        Mehdipatnam
+                    </h3>
+
+                    <div class="route-info">
+                        <span>● 4 active vehicles</span>
+                        <span>~32 min</span>
+                    </div>
+
+                </article>
+
+
+                <article class="route-card glass-card hover-lift">
+
+                    <div class="route-top">
+                        <span class="route-number">218</span>
+                        <span class="route-status delayed">DELAYED</span>
+                    </div>
+
+                    <h3>
+                        ECIL
+                        <span>→</span>
+                        Mehdipatnam
+                    </h3>
+
+                    <div class="route-info">
+                        <span>● 6 active vehicles</span>
+                        <span>~41 min</span>
+                    </div>
+
+                </article>
+
+
+                <article class="route-card glass-card hover-lift">
+
+                    <div class="route-top">
+                        <span class="route-number">10H</span>
+                        <span class="route-status delayed">DELAYED</span>
+                    </div>
+
+                    <h3>
+                        Secunderabad
+                        <span>→</span>
+                        Koti
+                    </h3>
+
+                    <div class="route-info">
+                        <span>● 3 active vehicles</span>
+                        <span>~27 min</span>
+                    </div>
+
+                </article>
+
+
+                <article class="route-card glass-card hover-lift">
+
+                    <div class="route-top">
+                        <span class="route-number">5K</span>
+                        <span class="route-status normal">ON TIME</span>
+                    </div>
+
+                    <h3>
+                        Koti
+                        <span>→</span>
+                        Kukatpally
+                    </h3>
+
+                    <div class="route-info">
+                        <span>● 5 active vehicles</span>
+                        <span>~38 min</span>
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ANALYTICS
+        ========================== -->
+        <section
+            class="section analytics-section reveal"
+            id="analytics"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-kicker">
+                        MOBILITY INTELLIGENCE
+                    </span>
+
+                    <h2>
+                        City Analytics
+                    </h2>
+
+                    <p>
+                        Understand how Hyderabad is moving.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="analytics-grid">
+
+                <div class="analytics-card glass-card hover-lift">
+
+                    <div class="analytics-card-head">
+
+                        <div>
+                            <span>NETWORK PERFORMANCE</span>
+                            <h3>On-Time Performance</h3>
+                        </div>
+
+                        <strong>87%</strong>
+
+                    </div>
+
+                    <div class="progress-track">
+                        <div
+                            class="progress-fill"
+                            style="width: 87%;"
+                        ></div>
+                    </div>
+
+                    <p>
+                        Current network reliability
+                    </p>
+
+                </div>
+
+
+                <div class="analytics-card glass-card hover-lift">
+
+                    <div class="analytics-card-head">
+
+                        <div>
+                            <span>CONGESTION</span>
+                            <h3>Traffic Overview</h3>
+                        </div>
+
+                        <strong>4</strong>
+
+                    </div>
+
+                    <div class="mini-bars">
+
+                        <span style="height:45%"></span>
+                        <span style="height:68%"></span>
+                        <span style="height:55%"></span>
+                        <span style="height:82%"></span>
+                        <span style="height:61%"></span>
+                        <span style="height:90%"></span>
+                        <span style="height:72%"></span>
+
+                    </div>
+
+                    <p>
+                        Congestion across monitored routes
+                    </p>
+
+                </div>
+
+
+                <div class="analytics-card glass-card hover-lift">
+
+                    <div class="analytics-card-head">
+
+                        <div>
+                            <span>VEHICLE FLOW</span>
+                            <h3>Active Fleet</h3>
+                        </div>
+
+                        <strong>142</strong>
+
+                    </div>
+
+                    <div class="flow-line">
+                        <span></span>
+                    </div>
+
+                    <p>
+                        Vehicles currently operating
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             AI ASSISTANT
+        ========================== -->
+        <section
+            class="section assistant-section reveal"
+            id="assistant"
+        >
+
+            <div class="assistant-card glass-card">
+
+                <div class="assistant-visual">
+
+                    <div class="ai-orb">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                    <div class="ai-ring ring-one"></div>
+                    <div class="ai-ring ring-two"></div>
+
+                </div>
+
+
+                <div class="assistant-content">
+
+                    <span class="section-kicker">
+                        HAZE INTELLIGENCE
+                    </span>
+
+                    <h2>
+                        Your AI Mobility Assistant.
+                    </h2>
+
+                    <p>
+                        Ask about routes, traffic, buses,
+                        congestion and smarter ways to move
+                        through Hyderabad.
+                    </p>
+
+                    <button
+                        class="primary-btn"
+                        type="button"
+                        onclick="openChat()"
+                    >
+                        Ask HAZE AI
+                        <span>→</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ABOUT
+        ========================== -->
+        <section
+            class="section about-section reveal"
+            id="about"
+        >
+
+            <div class="about-grid">
+
+                <div class="about-heading">
+
+                    <span class="section-kicker">
+                        ABOUT HAZE
+                    </span>
+
+                    <h2>
+                        Building a
+                        <span>smarter city.</span>
+                    </h2>
+
+                    <div class="about-line"></div>
+
+                </div>
+
+
+                <div class="about-content">
+
+                    <p class="about-lead">
+                        HAZE is a smart mobility platform designed
+                        to make urban transportation simpler,
+                        faster and more intelligent.
+                    </p>
+
+                    <p>
+                        By bringing live transit information,
+                        route intelligence, congestion insights
+                        and AI assistance into one interface,
+                        HAZE creates a clearer picture of how
+                        Hyderabad moves.
+                    </p>
+
+                    <p>
+                        The goal is simple:
+                        <strong>
+                            help people spend less time
+                            waiting and more time moving.
+                        </strong>
+                    </p>
+
+
+                    <div class="about-features">
+
+                        <div class="about-feature hover-lift">
+
+                            <span>01</span>
+
+                            <div>
+                                <h3>Real-Time</h3>
+                                <p>
+                                    Live mobility intelligence
+                                    for a connected city.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="about-feature hover-lift">
+
+                            <span>02</span>
+
+                            <div>
+                                <h3>AI-Powered</h3>
+                                <p>
+                                    Intelligent assistance
+                                    for everyday travel.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="about-feature hover-lift">
+
+                            <span>03</span>
+
+                            <div>
+                                <h3>Hyperlocal</h3>
+                                <p>
+                                    Built around the unique
+                                    movement of Hyderabad.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         AI CHATBOT
+    ========================== -->
+
+    <button
+        class="chat-fab"
+        id="chatFab"
+        type="button"
+        onclick="toggleChat()"
+        aria-label="Open HAZE AI assistant"
+    >
+
+        <div class="bot-face">
+
+            <div class="bot-eye left-eye"></div>
+
+            <div class="bot-eye right-eye"></div>
+
+            <div class="bot-mouth"></div>
+
+        </div>
+
+        <span class="chat-pulse"></span>
+
+    </button>
+
+
+    <div
+        class="chat-window"
+        id="chatWindow"
+        aria-hidden="true"
+    >
+
+        <div class="chat-header">
+
+            <div class="chat-bot-avatar">
+
+                <div class="bot-face small">
+
+                    <div class="bot-eye left-eye"></div>
+                    <div class="bot-eye right-eye"></div>
+                    <div class="bot-mouth"></div>
+
+                </div>
+
+            </div>
+
+            <div>
+
+                <strong>
+                    HAZE AI
+                </strong>
+
+                <span>
+                    Mobility Assistant
+                </span>
+
+            </div>
+
+            <button
+                type="button"
+                onclick="toggleChat()"
+                aria-label="Close chat"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            class="chat-messages"
+            id="chatMessages"
+        >
+
+            <div class="chat-message bot">
+
+                <span>H</span>
+
+                <p>
+                    Hey! I'm HAZE AI. Ask me about
+                    Hyderabad routes, buses or traffic.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="quick-prompts">
+
+            <button
+                type="button"
+                onclick="quickChat('Show me busy routes')"
+            >
+                Busy routes
+            </button>
+
+            <button
+                type="button"
+                onclick="quickChat('Find a bus route')"
+            >
+                Bus route
+            </button>
+
+            <button
+                type="button"
+                onclick="quickChat('What is the traffic like?')"
+            >
+                Traffic
+            </button>
+
+        </div>
+
+
+        <div class="chat-input-row">
+
+            <input
+                type="text"
+                id="chatInput"
+                placeholder="Ask HAZE..."
+                autocomplete="off"
+                onkeydown="handleChatKey(event)"
+            >
+
+            <button
+                type="button"
+                onclick="sendChatMessage()"
+                aria-label="Send message"
+            >
+                ↑
+            </button>
+
+        </div>
+
     </div>
 
-  </header>
 
+    <!-- =========================
+         VEHICLE DETAILS PANEL
+    ========================== -->
 
-  <!-- ================= HERO ================= -->
-  <main>
+    <div
+        class="vehicle-panel"
+        id="vehiclePanel"
+        aria-hidden="true"
+    >
 
-    <section class="hero" id="home">
-
-      <div class="hero-background"></div>
-
-      <div class="hero-content">
-
-        <div class="location-badge">
-          <span class="pulse-dot"></span>
-          Hyderabad • Telangana
-        </div>
-
-        <h1>
-          Move Smarter
-          <br>
-          Through Your
-          <span>City.</span>
-        </h1>
-
-        <p class="hero-description">
-          HAZE is a hyperlocal AI-powered zonal mobility engine
-          that helps you track buses, detect congestion and plan
-          better routes in real-time.
-        </p>
-
-        <div class="hero-buttons">
-          <a href="#transit" class="primary-btn">
-            Explore Live Transit
-            <span>→</span>
-          </a>
-
-          <a href="#analytics" class="secondary-btn">
-            Watch Demo
-          </a>
-        </div>
-
-        <div class="hero-stats">
-
-          <div class="hero-stat">
-            <strong>1,240+</strong>
-            <span>Live Vehicles</span>
-          </div>
-
-          <div class="hero-stat">
-            <strong>120+</strong>
-            <span>Bus Routes</span>
-          </div>
-
-          <div class="hero-stat">
-            <strong>86%</strong>
-            <span>On-Time Rate</span>
-          </div>
-
-          <div class="hero-stat">
-            <strong>Real-time</strong>
-            <span>City Intelligence</span>
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- Route planner -->
-      <div class="planner-card">
-
-        <div class="planner-tabs">
-          <button class="planner-tab active">Plan Route</button>
-          <button class="planner-tab">Live Buses</button>
-          <button class="planner-tab">Ask HAZE</button>
-        </div>
-
-        <div class="location-input">
-          <span>⌖</span>
-          <div>
-            <small>FROM</small>
-            <strong>Current Location</strong>
-          </div>
-        </div>
-
-        <div class="location-line"></div>
-
-        <div class="location-input">
-          <span>◉</span>
-          <div>
-            <small>TO</small>
-            <strong>Choose Destination</strong>
-          </div>
-        </div>
-
-        <button class="route-btn" onclick="scrollToTransit()">
-          Find Best Route →
+        <button
+            class="vehicle-panel-close"
+            type="button"
+            onclick="closeVehicleDetails()"
+            aria-label="Close vehicle details"
+        >
+            ×
         </button>
 
-      </div>
+        <span class="section-kicker">
+            LIVE VEHICLE
+        </span>
 
-    </section>
+        <h3 id="vehiclePanelId">
+            BUS-101
+        </h3>
 
-
-    <!-- ================= LIVE TRANSIT ================= -->
-    <section class="section" id="transit">
-
-      <div class="section-heading">
-
-        <div>
-          <span class="section-number">01 / LIVE TRANSIT</span>
-
-          <h2>City Mobility <span>In Real-Time.</span></h2>
-
-          <p>
-            Monitor vehicles, routes and congestion across the city.
-          </p>
+        <div class="vehicle-panel-route">
+            Route <strong id="vehiclePanelRoute">25A</strong>
         </div>
 
-        <div class="live-indicator">
-          <span class="pulse-dot"></span>
-          SYSTEM LIVE
-        </div>
-
-      </div>
-
-
-      <div class="dashboard">
-
-        <!-- Sidebar -->
-        <aside class="dashboard-sidebar">
-
-          <div class="side-brand">
-            <span class="brand-icon small">H</span>
-            <strong>HAZE</strong>
-          </div>
-
-          <div class="side-menu">
-
-            <a href="#home">⌂ <span>Dashboard</span></a>
-
-            <a href="#transit" class="selected">
-              ◉ <span>Live Transit</span>
-            </a>
-
-            <a href="#routes">
-              ◇ <span>Routes</span>
-            </a>
-
-            <a href="#analytics">
-              ◈ <span>Analytics</span>
-            </a>
-
-            <a href="#assistant">
-              ✦ <span>AI Assistant</span>
-            </a>
-
-            <a href="#about">
-              ○ <span>Settings</span>
-            </a>
-
-          </div>
-
-          <div class="sidebar-status">
-            <span class="pulse-dot"></span>
-            All systems operational
-          </div>
-
-        </aside>
-
-
-        <!-- Dashboard main -->
-        <div class="dashboard-main">
-
-          <!-- Stats -->
-          <div class="dashboard-stats">
-
-            <div class="metric-card">
-              <span class="metric-icon blue">▣</span>
-              <div>
-                <small>ACTIVE VEHICLES</small>
-                <strong id="activeVehicles">142</strong>
-              </div>
-              <em>Live now</em>
-            </div>
-
-            <div class="metric-card">
-              <span class="metric-icon cyan">◇</span>
-              <div>
-                <small>ACTIVE ROUTES</small>
-                <strong id="activeRoutes">24</strong>
-              </div>
-              <em>Operating</em>
-            </div>
-
-            <div class="metric-card">
-              <span class="metric-icon green">✓</span>
-              <div>
-                <small>ON-TIME RATE</small>
-                <strong id="onTimeRate">87%</strong>
-              </div>
-              <em>Performance</em>
-            </div>
-
-            <div class="metric-card warning-card">
-              <span class="metric-icon orange">!</span>
-              <div>
-                <small>CONGESTED</small>
-                <strong id="congestedCount">4</strong>
-              </div>
-              <em>Need attention</em>
-            </div>
-
-          </div>
-
-
-          <!-- Map -->
-          <div class="map-card">
-
-            <div class="map-header">
-              <div>
-                <span>LIVE TRANSIT MAP</span>
-                <h3>Hyderabad Mobility Network</h3>
-              </div>
-
-              <div class="map-live">
-                <span class="pulse-dot"></span>
-                LIVE
-              </div>
-            </div>
-
-            <div id="map"></div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ================= ROUTES ================= -->
-    <section class="section" id="routes">
-
-      <div class="section-heading">
-
-        <div>
-          <span class="section-number">02 / ROUTE INTELLIGENCE</span>
-
-          <h2>Explore Your <span>Routes.</span></h2>
-
-          <p>
-            Detailed information about city bus routes with live tracking.
-          </p>
-        </div>
-
-      </div>
-
-
-      <div class="route-layout">
-
-        <div class="route-feature">
-
-          <div class="route-top">
-
-            <div class="route-bus-icon">▣</div>
+        <div class="vehicle-detail-grid">
 
             <div>
-              <small>BUS ROUTE</small>
-              <h3>Route 218</h3>
-              <p>Hyderabad City Transit</p>
-            </div>
-
-            <span class="status-pill">ON TIME</span>
-
-          </div>
-
-          <div class="route-tabs">
-            <span class="active">Overview</span>
-            <span>Live Buses</span>
-            <span>Stops</span>
-            <span>Schedule</span>
-          </div>
-
-          <div class="route-metrics">
-
-            <div>
-              <strong>24</strong>
-              <span>Live Buses</span>
+                <span>Speed</span>
+                <strong id="vehiclePanelSpeed">24 km/h</strong>
             </div>
 
             <div>
-              <strong>48 min</strong>
-              <span>Average Trip</span>
+                <span>Delay</span>
+                <strong id="vehiclePanelDelay">+2 min</strong>
             </div>
 
             <div>
-              <strong>12.4 km</strong>
-              <span>Route Length</span>
+                <span>Status</span>
+                <strong id="vehiclePanelStatus">NORMAL</strong>
             </div>
 
-            <div>
-              <strong>86%</strong>
-              <span>On-Time</span>
-            </div>
-
-          </div>
-
-          <div class="route-progress">
-            <div class="progress-title">
-              <span>Route Performance</span>
-              <strong>86%</strong>
-            </div>
-
-            <div class="progress-bar">
-              <span style="width:86%"></span>
-            </div>
-          </div>
-
         </div>
-
-
-        <div class="route-list">
-
-          <div class="route-list-header">
-            <span>POPULAR ROUTES</span>
-            <button>View all →</button>
-          </div>
-
-          <div class="route-mini-card">
-            <span class="route-number">218</span>
-            <div>
-              <strong>Mehdipatnam → Secunderabad</strong>
-              <small>24 buses • 12.4 km</small>
-            </div>
-            <span class="status-dot green-dot"></span>
-          </div>
-
-          <div class="route-mini-card">
-            <span class="route-number">25B</span>
-            <div>
-              <strong>Charminar → Hitech City</strong>
-              <small>18 buses • 15.8 km</small>
-            </div>
-            <span class="status-dot yellow-dot"></span>
-          </div>
-
-          <div class="route-mini-card">
-            <span class="route-number">5K</span>
-            <div>
-              <strong>Koti → Kukatpally</strong>
-              <small>31 buses • 19.2 km</small>
-            </div>
-            <span class="status-dot green-dot"></span>
-          </div>
-
-          <div class="route-mini-card">
-            <span class="route-number">49M</span>
-            <div>
-              <strong>LB Nagar → Madhapur</strong>
-              <small>15 buses • 17.6 km</small>
-            </div>
-            <span class="status-dot red-dot"></span>
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ================= ANALYTICS ================= -->
-    <section class="section" id="analytics">
-
-      <div class="section-heading">
-
-        <div>
-          <span class="section-number">03 / ANALYTICS</span>
-
-          <h2>Understand Your <span>City.</span></h2>
-
-          <p>
-            Visual insights about city traffic, congestion and usage patterns.
-          </p>
-        </div>
-
-        <button class="period-btn">Last 24 Hours ▾</button>
-
-      </div>
-
-
-      <div class="analytics-grid">
-
-        <div class="analytics-card">
-          <small>DAILY ACTIVE VEHICLES</small>
-          <strong>1,240</strong>
-          <span class="positive">↑ 8.4%</span>
-
-          <div class="mini-chart">
-            <span style="height:35%"></span>
-            <span style="height:48%"></span>
-            <span style="height:42%"></span>
-            <span style="height:64%"></span>
-            <span style="height:55%"></span>
-            <span style="height:78%"></span>
-            <span style="height:92%"></span>
-            <span style="height:75%"></span>
-          </div>
-        </div>
-
-        <div class="analytics-card">
-          <small>ON-TIME PERFORMANCE</small>
-          <strong>86%</strong>
-          <span class="positive">↑ 3.2%</span>
-
-          <div class="circle-progress">
-            <div>86%</div>
-          </div>
-        </div>
-
-        <div class="analytics-card">
-          <small>AVG. TRIP DISTANCE</small>
-          <strong>12.4 km</strong>
-          <span class="positive">↑ 1.8%</span>
-
-          <div class="horizontal-bars">
-            <i style="width:82%"></i>
-            <i style="width:64%"></i>
-            <i style="width:91%"></i>
-            <i style="width:48%"></i>
-          </div>
-        </div>
-
-        <div class="analytics-card danger">
-          <small>CONGESTION ALERTS</small>
-          <strong>14</strong>
-          <span class="negative">↑ 4.1%</span>
-
-          <div class="alert-chart">
-            <span style="height:30%"></span>
-            <span style="height:45%"></span>
-            <span style="height:38%"></span>
-            <span style="height:72%"></span>
-            <span style="height:55%"></span>
-            <span style="height:88%"></span>
-            <span style="height:65%"></span>
-          </div>
-        </div>
-
-      </div>
-
-
-      <div class="insights-card">
-
-        <div>
-          <span class="section-number">CITY CONGESTION</span>
-          <h3>Traffic Intelligence Overview</h3>
-        </div>
-
-        <div class="congestion-row">
-
-          <div class="congestion-item">
-            <span>Hitech City</span>
-            <div><i style="width:88%"></i></div>
-            <strong>88%</strong>
-          </div>
-
-          <div class="congestion-item">
-            <span>Mehdipatnam</span>
-            <div><i style="width:62%"></i></div>
-            <strong>62%</strong>
-          </div>
-
-          <div class="congestion-item">
-            <span>Secunderabad</span>
-            <div><i style="width:47%"></i></div>
-            <strong>47%</strong>
-          </div>
-
-          <div class="congestion-item">
-            <span>LB Nagar</span>
-            <div><i style="width:73%"></i></div>
-            <strong>73%</strong>
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ================= AI ASSISTANT ================= -->
-    <section class="section assistant-section" id="assistant">
-
-      <div class="assistant-grid">
-
-        <div>
-
-          <span class="section-number">04 / AI ASSISTANT</span>
-
-          <h2>
-            Your City.
-            <br>
-            <span>Your Intelligence.</span>
-          </h2>
-
-          <p>
-            Ask HAZE about routes, traffic, buses and congestion.
-            Get intelligent mobility suggestions in seconds.
-          </p>
-
-          <div class="assistant-features">
-
-            <div>
-              <span>✦</span>
-              <strong>Smart Route Planning</strong>
-            </div>
-
-            <div>
-              <span>◉</span>
-              <strong>Real-Time Transit Answers</strong>
-            </div>
-
-            <div>
-              <span>◇</span>
-              <strong>Traffic Intelligence</strong>
-            </div>
-
-          </div>
-
-          <button class="primary-btn" onclick="toggleChat()">
-            Ask HAZE AI →
-          </button>
-
-        </div>
-
-
-        <div class="ai-preview">
-
-          <div class="ai-preview-header">
-            <span class="ai-avatar">H</span>
-            <div>
-              <strong>HAZE AI</strong>
-              <small>Mobility Intelligence</small>
-            </div>
-            <span class="ai-online">● Online</span>
-          </div>
-
-          <div class="ai-message">
-            <span>H</span>
-            <p>
-              Hello! I can help you find the fastest route,
-              check live buses or understand traffic conditions.
-            </p>
-          </div>
-
-          <div class="ai-suggestions">
-            <button onclick="quickChat('Find the fastest route')">
-              Fastest route
-            </button>
-
-            <button onclick="quickChat('Show live buses')">
-              Live buses
-            </button>
-
-            <button onclick="quickChat('Check traffic')">
-              Check traffic
-            </button>
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ================= ABOUT ================= -->
-    <section class="section about-section" id="about">
-
-      <span class="section-number">05 / ABOUT HAZE</span>
-
-      <h2>Building Smarter <span>Urban Mobility.</span></h2>
-
-      <p>
-        HAZE combines real-time transit intelligence, route analytics
-        and AI-assisted mobility insights to make movement across
-        Hyderabad smarter, faster and more efficient.
-      </p>
-
-      <div class="about-cards">
-
-        <div>
-          <strong>01</strong>
-          <h3>Observe</h3>
-          <p>Monitor vehicles and city movement in real-time.</p>
-        </div>
-
-        <div>
-          <strong>02</strong>
-          <h3>Understand</h3>
-          <p>Analyze congestion and transit performance.</p>
-        </div>
-
-        <div>
-          <strong>03</strong>
-          <h3>Optimize</h3>
-          <p>Use intelligent routing to improve urban mobility.</p>
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <!-- ================= CHATBOT ================= -->
-
-  <button
-    class="chat-fab"
-    id="chatFab"
-    onclick="toggleChat()"
-    aria-label="Open HAZE AI"
-  >
-    ✦
-  </button>
-
-
-  <div class="chat-window" id="chatWindow">
-
-    <div class="chat-header">
-
-      <div class="ai-avatar">H</div>
-
-      <div>
-        <strong>HAZE AI</strong>
-        <small><span class="pulse-dot"></span> Online</small>
-      </div>
-
-      <button onclick="toggleChat()">×</button>
 
     </div>
 
 
-    <div class="chat-messages" id="chatMessages">
+    <!-- =========================
+         FOOTER
+    ========================== -->
 
-      <div class="chat-message bot">
-        <span>H</span>
-        <p>
-          Hey! I'm HAZE AI. How can I help you navigate the city?
-        </p>
-      </div>
+    <footer class="footer">
 
-    </div>
+        <div class="footer-inner">
 
+            <div class="footer-brand">
 
-    <div class="chat-suggestions">
+                <strong>HAZE</strong>
 
-      <button onclick="quickChat('Find the fastest route')">
-        Fastest route
-      </button>
+                <span>
+                    Hyperlocal AI-Powered Zonal Mobility Engine
+                </span>
 
-      <button onclick="quickChat('Show live buses')">
-        Live buses
-      </button>
+            </div>
 
-      <button onclick="quickChat('Check congestion')">
-        Traffic
-      </button>
+            <div class="footer-copy">
+                © 2026 HAZE. Built for smarter urban mobility.
+            </div>
 
-    </div>
+        </div>
+
+    </footer>
 
 
-    <div class="chat-input">
+    <!-- Leaflet JS -->
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    ></script>
 
-      <input
-        type="text"
-        id="chatInput"
-        placeholder="Ask HAZE anything..."
-        onkeydown="handleChatKey(event)"
-      >
-
-      <button onclick="sendChatMessage()">↑</button>
-
-    </div>
-
-  </div>
-
-
-  <!-- ================= FOOTER ================= -->
-
-  <footer>
-
-    <div class="footer-brand">
-      <span class="brand-icon">H</span>
-      <strong>HAZE</strong>
-    </div>
-
-    <p>
-      Hyperlocal AI-Powered Zonal Mobility Engine
-    </p>
-
-    <span>© 2026 HAZE • Smart Urban Mobility</span>
-
-  </footer>
-
-
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-  <!-- HAZE JS -->
-  <script src="app.js"></script>
+    <!-- Main JavaScript -->
+    <script src="app.js"></script>
 
 </body>
 </html>
