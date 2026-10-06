@@ -1695,3 +1695,188 @@ function animateCounters() {
   }
 
 })();
+/* =========================================================
+   HAZE — LEFT NAV DRAWER
+   Lightweight pointer/swipe interaction
+   ========================================================= */
+
+(function setupHazeNavDrawer() {
+
+  const trigger =
+    document.getElementById("navDrawerTrigger");
+
+  const backdrop =
+    document.getElementById("navDrawerBackdrop");
+
+  const drawer =
+    document.querySelector(".desktop-nav");
+
+  if (!trigger || !drawer) return;
+
+  let startX = 0;
+  let startY = 0;
+  let dragging = false;
+
+  function openDrawer() {
+
+    document.body.classList.add(
+      "nav-drawer-open"
+    );
+
+    trigger.setAttribute(
+      "aria-expanded",
+      "true"
+    );
+
+  }
+
+  function closeDrawer() {
+
+    document.body.classList.remove(
+      "nav-drawer-open"
+    );
+
+    trigger.setAttribute(
+      "aria-expanded",
+      "false"
+    );
+
+  }
+
+  function toggleDrawer() {
+
+    document.body.classList.contains(
+      "nav-drawer-open"
+    )
+      ? closeDrawer()
+      : openDrawer();
+
+  }
+
+  trigger.addEventListener(
+    "click",
+    toggleDrawer
+  );
+
+  backdrop?.addEventListener(
+    "click",
+    closeDrawer
+  );
+
+  drawer
+    .querySelectorAll(".nav-link")
+    .forEach(link => {
+
+      link.addEventListener(
+        "click",
+        () => {
+
+          closeDrawer();
+
+        },
+        { passive: true }
+      );
+
+    });
+
+  /* ESC */
+
+  document.addEventListener(
+    "keydown",
+    event => {
+
+      if (
+        event.key === "Escape" &&
+        document.body.classList.contains(
+          "nav-drawer-open"
+        )
+      ) {
+
+        closeDrawer();
+
+      }
+
+    },
+    { passive: true }
+  );
+
+  /* TOUCH SWIPE */
+
+  document.addEventListener(
+    "touchstart",
+    event => {
+
+      const touch =
+        event.touches[0];
+
+      if (!touch) return;
+
+      startX = touch.clientX;
+      startY = touch.clientY;
+
+      dragging = true;
+
+    },
+    { passive: true }
+  );
+
+  document.addEventListener(
+    "touchend",
+    event => {
+
+      if (!dragging) return;
+
+      dragging = false;
+
+      const touch =
+        event.changedTouches[0];
+
+      if (!touch) return;
+
+      const deltaX =
+        touch.clientX - startX;
+
+      const deltaY =
+        touch.clientY - startY;
+
+      /*
+       * Ignore vertical scrolling.
+       */
+      if (
+        Math.abs(deltaY) >
+        Math.abs(deltaX)
+      ) {
+        return;
+      }
+
+      /*
+       * Swipe right from left edge.
+       */
+      if (
+        startX < 35 &&
+        deltaX > 65
+      ) {
+
+        openDrawer();
+
+      }
+
+      /*
+       * Swipe left while drawer is open.
+       */
+      else if (
+        document.body.classList.contains(
+          "nav-drawer-open"
+        ) &&
+        deltaX < -65
+      ) {
+
+        closeDrawer();
+
+      }
+
+    },
+    { passive: true }
+  );
+
+})();
